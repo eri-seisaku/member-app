@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/store/auth';
-// import { auth } from '../firebase/config'
 
 
 // 会員サイトルート
@@ -38,7 +37,7 @@ const adminRoutes = [
   {
     path: '/admin',
     component: () => import('@/layouts/admin/Layout.vue'),
-    meta: { requiresAuth: true },
+    // meta: { requiresAuth: true },
     children: [
       {
         path: '/admin',
@@ -46,7 +45,8 @@ const adminRoutes = [
         component: () => import('@/views/admin/Admin.vue'),
       },
       {
-        path: '/admin/profile/:userId',
+        path: '/admin/profile',
+        // path: '/admin/profile/:userId',
         component: () => import('@/views/admin/Profile.vue'),
       },
       {
@@ -64,20 +64,20 @@ const router = createRouter({
 
 
 
-// beforeEach ガードで認証状態を確認し、アクセス権を制御する
-router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore();
+// // beforeEach ガードで認証状態を確認し、アクセス権を制御する
+// router.beforeEach((to, from, next) => {
+//   const authStore = useAuthStore();
 
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    // 認証が必要なページにアクセスする際に認証が必要かどうかを判定
-    if (authStore.isAuthenticated) {
-      next(); // 認証済みなら遷移を続行
-    } else {
-      next('/login'); // 認証していなければログインページにリダイレクト
-    }
-  } else {
-    next(); // その他のページは遷移を許可
-  }
-});
+//   if (to.matched.some(record => record.meta.requiresAuth)) {
+//     // 認証が必要なページにアクセスする際に認証が必要かどうかを判定
+//     if (authStore.isAuthenticated) {
+//       next(); // 認証済みなら遷移を続行
+//     } else {
+//       next('/login'); // 認証していなければログインページにリダイレクト
+//     }
+//   } else {
+//     next(); // その他のページは遷移を許可
+//   }
+// });
 
 export default router;

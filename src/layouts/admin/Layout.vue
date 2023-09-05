@@ -17,7 +17,7 @@
 
       <v-btn variant="text">
         <v-icon icon="mdi-account"></v-icon>
-        <span>{{ greeting }}</span>
+        <!-- <span>{{ greeting }}</span> -->
 
         <v-menu activator="parent">
           <v-list bg-color="user">
@@ -42,9 +42,13 @@
     >
     <v-list-item
       prepend-avatar="../../assets/icon/user_icon.png"
-      :title="authStore.userProfile.email"
       nav
     >
+    <!-- <v-list-item
+      prepend-avatar="../../assets/icon/user_icon.png"
+      :title="authStore.userProfile.email"
+      nav
+    > -->
       <template v-slot:append>
         <v-btn
           variant="text"
@@ -101,7 +105,8 @@ const navMenus = [
   {
     icon: 'mdi-account-cog',
     title: 'プロフィール',
-    to: `/admin/profile/${authStore.userProfile.id}`
+    // to: `/admin/profile/${authStore.userProfile.id}`
+    to: 'admin/profile'
   },
   {
     icon: 'mdi-file-account',
@@ -113,7 +118,8 @@ const navMenus = [
 const userMenus = [
   {
     title: 'プロフィール編集',
-    to: `/admin/profile/${authStore.userProfile.id}`
+    // to: `/admin/profile/${authStore.userProfile.id}`
+    to: 'admin/profile'
   },
   {
     title: 'ログアウト',
@@ -122,8 +128,8 @@ const userMenus = [
 ];
 
 // ログインユーザーの挨拶
-const greeting = computed(() => {
-  return `こんにちは、${authStore.userProfile.email} さん`;
-});
+// const greeting = computed(() => {
+//   return `こんにちは、${authStore.userProfile.email} さん`;
+// });
 
 </script>

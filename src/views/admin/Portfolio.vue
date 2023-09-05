@@ -20,10 +20,11 @@
           :class="{enter: isEnter}"
         >
           ファイルアップロード
+          {{ imageError ? imageError : '' }}
         </div>
         <ul class="d-flex justify-start">
           <li
-            v-for="file in files"
+          v-for="(file, index) in files"
             :key="index"
             class="d-flex flex-column align-center ma-5 hover-action-pointer"
             @click="deleteFile(index)"
@@ -51,7 +52,8 @@
 
 <script setup>
 import { ref } from 'vue';
-
+import { validationSchema } from '../../validate/config';
+const imageError = ref('');
 const files = ref([]);
 
 const isEnter = ref(false);
@@ -67,11 +69,31 @@ const dragLeave = () => {
 const dragOver = () => {
   console.log('dragOver');
 }
+// ---------------------------------------------
 const dropFile = () => {
-  // console.log(event.dataTransfer.files);
-  files.value.push(...event.dataTransfer.files)
-  isEnter.value = false;
-}
+  const uploadedFile = event.dataTransfer.files[0]; // 1つのファイルのみを考慮しています
+  console.log(uploadedFile); // 1
+
+  // ファイルのバリデーションを実行
+  validateImage(uploadedFile);
+};
+
+const validateImage = (file) => {
+  // 画像のバリデーションルールを適用
+  const schema = validationSchema.fields.image;
+  try {
+    schema.validateSync(file);
+    // バリデーション成功時
+    imageError.value = ''; // エラーメッセージをクリア
+    // ファイルを追加
+    files.value.push(file);
+  } catch (error) {
+    // バリデーションエラー時
+    imageError.value = error.message;
+    // ファイルを追加しない
+  }
+};
+// ---------------------------------------------
 // アップロードした画像を削除
 const deleteFile = (index) => {
   files.value.splice(index, 1);
