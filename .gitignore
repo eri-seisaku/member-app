@@ -3,7 +3,7 @@ node_modules
 /dist
 
 # 追加
-src/firebase/config.js
+src/firebase/firebase.js
 
 # local env files
 .env.local

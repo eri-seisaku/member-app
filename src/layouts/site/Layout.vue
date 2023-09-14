@@ -1,61 +1,118 @@
 <template>
   <v-app id="inspire">
 
+    <v-app-bar app flat>
+      <v-app-bar-nav-icon
+        @click="drawer = !drawer"
+        class="d-block d-md-none"
+      />
+      <v-app-bar-title>Application</v-app-bar-title>
+        <v-tabs
+          class="d-none d-md-block"
+          centered
+        >
+          <v-tab
+            v-for="menu in navMenus"
+            :key="menu.title"
+            :href="menu.to"
+            :exact="true"
+          >
+            {{ menu.title }}
+          </v-tab>
+        </v-tabs>
+
+        <v-spacer></v-spacer>
+
+    </v-app-bar>
+
     <v-navigation-drawer v-model="drawer">
-      <!-- https://qiita.com/mml/items/16030c4404b4a814956b -->
-      <v-list nav>
+      <v-list>
         <v-list-item
-          v-for="item in menuItems"
-          :key="item.title"
-          :prepend-icon="item.icon"
-          :title="item.title"
-          :to="item.to"
+          v-for="menu in navMenus"
+          :key="menu.title"
+          :prepend-icon="menu.icon"
+          :title="menu.title"
+          :to="menu.to"
           :exact="true"
         ></v-list-item>
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-      <v-app-bar-title>Logo</v-app-bar-title>
-    </v-app-bar>
+    <v-main class="bg-grey-lighten-3">
+      <v-container>
+        <v-row>
+          <v-col cols="12" md="10">
+            <v-sheet
+              min-height="70vh"
+              rounded="lg"
+            >
+              <router-view />
+            </v-sheet>
+          </v-col>
+          <v-col cols="12" md="2">
+            <v-sheet rounded="lg">
+              <v-list rounded="lg">
+                <v-list-item
+                  v-for="n in 5"
+                  :key="n"
+                  link
+                  :title="`List Item ${n}`"
+                ></v-list-item>
 
-    <v-main>
-      <router-view />
+                <v-divider class="my-2"></v-divider>
+
+                <v-list-item
+                  color="grey-lighten-4"
+                  link
+                  title="Refresh"
+                ></v-list-item>
+              </v-list>
+            </v-sheet>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-main>
-
-    <v-footer app color="white">
-      <v-col cols="12">
-        <span>© 2023</span>
-      </v-col>
-    </v-footer>
-
   </v-app>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-
+import { ref, onMounted, onBeforeUnmount } from "vue";
 const drawer = ref(false)
+onMounted(() => {
+  const resizeHandler = (e) => {
+    if (!(e instanceof UIEvent)) {
+      drawer.value = false;
+    }
+  };
+  window.addEventListener("resize", resizeHandler);
 
+  // リサイズは頻繁にあるのでメモリを圧迫しないように削除する
+  onBeforeUnmount(() => {
+    window.removeEventListener("resize", resizeHandler);
+  });
+});
 
-const menuItems = [
+const navMenus = [
   {
-    icon: 'mdi-home-city',
-    title: 'Home',
-    to: "/"
+    title: 'ホーム',
+    to: '/'
   },
   {
-    icon: 'mdi-account',
-    title: 'Check',
-    to: '/check'
+    title: 'チェック',
+    to: "/check"
   },
   {
-    icon: 'mdi-account-group-outline',
-    title: 'Login',
+    title: 'ログイン',
     to: '/login'
-  }
+  },
+  {
+    title: '組合員一覧',
+    to: "/list"
+  },
 ];
 
+
 </script>
+
+

@@ -1,55 +1,46 @@
 <template>
-  <v-container>
-    <!-- エラーメッセージを表示する要素 -->
-    <v-alert
-      border="start"
-      variant="tonal"
-      color="red-accent-4"
-      v-if="errorMessage"
-    >
-      {{ errorMessage }}
-    </v-alert>
+  <div class="ly_top">
+    <h1>投稿</h1>
+    <div class="ly_top_inner">
+      <div v-if="displayList.value">
+        <button @click="toCreate">新規作成</button>
+      </div>
+      <div v-else>
+        <button @click="toList">戻る</button>
+      </div>
 
-    <!-- アップロードボタン -->
-    <v-btn
-      class="ma-2"
-      @click="uploadDialog = true"
-    >
-      <v-icon start icon="mdi-upload"></v-icon>
-      Upload
-    </v-btn>
-
-    <!-- アップロードコンポーネント -->
-    <Upload
-      v-model:errorMessage="errorMessage"
-      v-model:dialog="uploadDialog"
-      @update:filesUploaded="handleFilesUploaded"
-    />
-  </v-container>
+      <div v-if="displayList.value">
+        <List></List>
+      </div>
+      <div v-else>
+        <Create></Create>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
-import Upload from '../../components/Upload.vue';
-import { ref } from 'vue'
+import { ref } from 'vue';
+import List from '../../components/List.vue';
+import Create from '../../components/Create.vue';
 
-// 初期化
-const uploadDialog = ref(false);
-const errorMessage = ref('');
+const displayList = ref(false);
+const displayCreate = ref(true);
 
-// ファイルがアップロードされた時のハンドラ
-const handleFilesUploaded = (files) => {
-  console.log('Received uploaded files:', files);
+const toList = () => {
+  displayList.value = true
+  displayCreate.value = false
+};
+const toCreate = () => {
+  displayList.value = false
+  displayCreate.value = true
 };
 
-
-// デバック
-// import { watch } from 'vue';
-// watch(uploadDialog, (newVal) => {
-//   console.log('uploadDialogの値が変更されました:', newVal);
-// });
-
-// watch(errorMessage, (newVal) => {
-//   console.log('errorMessageの値が変更されました:', newVal);
-// });
-
 </script>
+
+<style>
+.ly_top_inner {
+  max-width: 1000px;
+  margin: auto;
+}
+</style>

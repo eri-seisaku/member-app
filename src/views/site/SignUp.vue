@@ -37,6 +37,7 @@
             <v-btn
               class="me-4"
               type="submit"
+              variant="outlined"
             >
               確認
             </v-btn>
@@ -61,11 +62,12 @@
             <v-btn
               class="me-4"
               type="submit"
+              variant="outlined"
             >
               送信
             </v-btn>
 
-            <v-btn @click="back">
+            <v-btn @click="back" variant="outlined">
               戻る
             </v-btn>
           </div>
@@ -76,27 +78,27 @@
 </template>
 
 <script setup>
-// Import
 import { ref, computed } from 'vue';
 import { useField, useForm } from 'vee-validate';
-import { validationSchema } from '../../validate/config';
-import { db, auth } from '../../firebase/config';
-import { collection, doc, setDoc } from "firebase/firestore";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { validationSchema } from '../../validate/validate';
 import { useRouter } from 'vue-router';
+import { signUp } from '../../firebase/auth';
+import { saveData } from '../../firebase/firestore';
 
 // Routerのインスタンスを作成
 const router = useRouter();
 
-// Form
+// Formの初期値
 const items = ref([
   'Item 1',
   'Item 2',
   'Item 3',
   'Item 4',
 ]);
+// 確認画面の切り替え
+const confirmMode = ref(false);
 
-// バリデーション
+// バリデーションの設定
 const { handleSubmit } = useForm({
   validationSchema,
 });
@@ -115,46 +117,36 @@ const filteredFields = computed(() => {
   return fields.filter(fieldInfo => fieldInfo.key !== 'password');
 });
 
-// 確認画面の切り替え
-const confirmMode = ref(false);
 
 const submit = handleSubmit(async (values) => {
-  if (!confirmMode.value) {
-    // 確認画面に切り替え
-    confirmMode.value = true;
-  } else {
-    // 送信処理
-    if (confirmMode.value) {
-      await signupUser(values);
+  try {
+    if (!confirmMode.value) {
+      // 確認画面に切り替え
+      confirmMode.value = true;
+    } else {
+      // 送信処理
+      if (confirmMode.value) {
+        const userData = {
+          name: values.name,
+          phone: values.phone,
+          email: values.email,
+          select: values.select,
+          createdAt: new Date(),
+        };
+
+        const user = await signUp(values.email, values.password);
+        const userRef = await saveData(user, "members", userData);
+
+        // 登録が成功した場合
+        router.push('/admin');
+      }
     }
+  } catch (error) {
+    // エラーが発生した場合
+    console.error("ユーザー登録エラー:", error.code, error.message);
+    // エラーメッセージを表示するか、必要な処理を追加する
   }
 });
-
-const signupUser = async (values) => {
-  // 非同期処理
-  try {
-    const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
-    const user = userCredential.user;
-
-    const userCollection = collection(db, "users");
-    const userData = {
-      name: values.name,
-      phone: values.phone,
-      email: values.email,
-      select: values.select,
-      createdAt: new Date(),
-    };
-
-    const userRef = doc(userCollection, user.uid);
-    await setDoc(userRef, userData);
-
-    // console.log(user.uid); // デバック
-
-    router.push('/admin/profile/');
-  } catch (error) {
-    console.error("ユーザー登録エラー:", error.code, error.message);
-  }
-};
 
 const back = () => {
   // フォームモードに戻る

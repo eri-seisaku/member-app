@@ -1,40 +1,51 @@
 <template>
   <v-container class="fill-height" fluid>
     <v-row no-gutters>
+      <v-col cols="12">
+        <PageTitle titleColor="rgb(var(--v-theme-user)" iconName="mdi-account-cog" titleText="プロフィール" />
+      </v-col>
       <v-col cols="4">
-        <Avatar
-          :userName="userData.name"
-          imageSrc="https://cdn.vuetifyjs.com/images/john.jpg"
-        />
+        <v-sheet class="pa-6 ma-6" rounded align="center">
+          <!--  -->
+          <v-avatar
+        color="grey"
+        size="150"
+      >
+        <v-img cover src="../../assets/icon/user_icon.png"></v-img>
+      </v-avatar>
+      <h4 class="mt-2 title blue-grey--text text--darken-2 font-weight-regular">{{ userData.name }}</h4>
+            <h6 class="subtitle-2 font-weight-light">Accoubts Manager Amix corp</h6>
+          <!--  -->
+        </v-sheet>
       </v-col>
       <v-col>
         <v-sheet class="pa-6 ma-6" rounded>
           <form @submit.prevent="submit">
           <v-row>
-            <v-col cols="6" xs="12">
+            <v-col cols="6">
               <Text
-                label="名前"
-                :disabled="false"
-                v-model:inputValue="userData.name"
-              />
+              label="名前"
+              :disabled="false"
+              v-model:inputValue="userData.name"
+            />
             </v-col>
-            <v-col>
+            <v-col cols="6">
               <Text
-                label="メールアドレス"
-                :disabled="false"
-                v-model:inputValue="userData.email"
-              />
+              label="メールアドレス"
+              :disabled="false"
+              v-model:inputValue="userData.email"
+            />
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="6" xs="12">
+            <v-col cols="6">
               <Text
                 label="電話番号"
                 :disabled="true"
                 v-model:inputValue="userData.phone"
               />
             </v-col>
-            <v-col>
+            <v-col cols="6">
               <Text
                 label="選択項目"
                 :disabled="true"
@@ -43,7 +54,7 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="6" xs="12">
+            <v-col cols="6">
               <v-btn
                 @click="showInput = !showInput"
                 variant="outlined"
@@ -69,17 +80,6 @@
           </v-row>
           <v-row>
             <v-col cols="12">
-              <v-btn
-                color="user"
-                type="submit"
-                class="mb-4"
-              >
-                <v-icon
-                  start
-                  icon="mdi-content-save"
-                ></v-icon>
-                更新
-              </v-btn>
               <v-card
                 class="mb-12"
                 color="surface-variant"
@@ -90,6 +90,15 @@
                   {{ errorMessage }}
                 </v-card-text>
               </v-card>
+
+              <v-btn
+                color="blue"
+                size="large"
+                variant="tonal"
+                type="submit"
+              >
+                更新
+              </v-btn>
             </v-col>
           </v-row>
           </form>
@@ -106,10 +115,9 @@ import { getData, updateData } from '../../firebase/firestore';
 import { updateEmailByAuth, updatePasswordByAuth } from '../../firebase/auth';
 
 // 各コンポーネントインポート
-import Title from '@/components/admin/Title.vue';
+import PageTitle from '@/components/PageTitle.vue';
 import Password from '@/components/inputs/Password.vue';
 import Text from '@/components/inputs/Text.vue';
-import Avatar from '@/components/Avatar.vue';
 
 // ログイン中のユーザー情報を取得
 const user = auth.currentUser;

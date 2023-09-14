@@ -20,6 +20,7 @@
         <v-btn
           class="mr-4"
           type="submit"
+          variant="outlined"
           :href="isAllChecked ? '/signup' : null"
           :disabled="!isAllChecked"
         >

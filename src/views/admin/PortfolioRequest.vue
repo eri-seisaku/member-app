@@ -52,7 +52,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { validationSchema } from '../../validate/config';
+import { validationSchema } from '../../validate/validate';
 const imageError = ref('');
 const files = ref([]);
 
@@ -132,3 +132,4 @@ ul {
   cursor: pointer;
 }
 </style>
+../../validate/validate
