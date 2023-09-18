@@ -58,7 +58,7 @@ const adminRoutes = [
       },
       {
         path: '/admin/portfolio',
-        component: () => import('@/views/admin/PortfolioRequest.vue'),
+        component: () => import('@/views/admin/PostProfile.vue'),
         meta: { title: 'PORTFOLIO'}
       },
     ],
@@ -69,7 +69,7 @@ const adminRoutes = [
 const loginRoutes = [
   {
     path: '/login',
-    component: () => import('@/layouts/loginLayout.vue'),
+    component: () => import('@/layouts/LoginLayout.vue'),
     children: [
       {
         path: '/login',

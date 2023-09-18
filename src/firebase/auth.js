@@ -23,6 +23,12 @@ export async function signUp(email, password) {
   }
 }
 
+// ログイン中のユーザー情報を取得する関数
+export async function getCurrentUser() {
+  const user = auth.currentUser;
+  return user;
+}
+
 // ログイン処理
 export async function login(email, password) {
   try {
@@ -70,6 +76,29 @@ export async function updateEmailByAuth(newEmail) {
   }
 }
 
+// メールアドレス更新チェック
+export async function emailCheck(submitEmail) {
+  try {
+    const user = auth.currentUser;
+
+    if (user) {
+      // メールアドレスを更新
+      if (user.email !== submitEmail) {
+        throw new Error("再認証が必要");
+      }
+
+      // 更新したメールアドレスに確認メールを送信
+      await updateEmailByAuth(submitEmail);
+
+    } else {
+      throw new Error("ユーザーがログインしていません。by Auth");
+    }
+  } catch (error) {
+    console.error("メールアドレスの更新エラーby Auth:", error);
+    throw error;
+  }
+}
+
 // パスワードを更新する関数
 export async function updatePasswordByAuth(currentPassword, newPassword) {
   try {
@@ -107,3 +136,5 @@ export async function resetPassword(email) {
     throw error;
   }
 }
+
+

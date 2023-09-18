@@ -2,9 +2,6 @@
   <v-container class="fill-height" fluid>
     <v-row>
       <v-col>
-        <h2 class="text-h4">
-          ポートフォリオ申請
-        </h2>
         <p class="mt-8 mb-8">
           最大5件まで登録可能。<br>
           申請後、事業所より承認され次第、担当者がWEBページに反映させます。<br>

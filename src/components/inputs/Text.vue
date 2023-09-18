@@ -3,9 +3,10 @@
     {{ label }}
   </label>
   <v-text-field
-    required
     density="compact"
     variant="outlined"
+    :type="type"
+    :required="required"
     :disabled="disabled"
     v-model="parentValue"
   ></v-text-field>
@@ -17,6 +18,8 @@ import { computed } from 'vue';
 // 親から子へ
 const props = defineProps({
   label: String,
+  type: String,
+  required: Boolean,
   disabled: Boolean,
   inputValue: String
 });

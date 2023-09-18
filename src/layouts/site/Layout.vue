@@ -6,7 +6,9 @@
         @click="drawer = !drawer"
         class="d-block d-md-none"
       />
-      <v-app-bar-title>Application</v-app-bar-title>
+
+      <v-app-bar-title style="cursor: pointer" @click="$router.push('/')">LOGO</v-app-bar-title>
+
         <v-tabs
           class="d-none d-md-block"
           centered
@@ -14,14 +16,21 @@
           <v-tab
             v-for="menu in navMenus"
             :key="menu.title"
-            :href="menu.to"
-            :exact="true"
+            :to="menu.to"
           >
             {{ menu.title }}
           </v-tab>
         </v-tabs>
 
         <v-spacer></v-spacer>
+
+        <v-btn
+          class="mr-4"
+          variant="outlined"
+          href='/login'
+        >
+          ログイン
+        </v-btn>
 
     </v-app-bar>
 
@@ -46,6 +55,7 @@
             <v-sheet
               min-height="70vh"
               rounded="lg"
+              class="pa-8"
             >
               <router-view />
             </v-sheet>
@@ -99,7 +109,7 @@ const navMenus = [
     to: '/'
   },
   {
-    title: 'チェック',
+    title: '入会申請',
     to: "/check"
   },
   {
@@ -111,7 +121,6 @@ const navMenus = [
     to: "/list"
   },
 ];
-
 
 </script>
 

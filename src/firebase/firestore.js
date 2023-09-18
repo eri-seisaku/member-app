@@ -2,8 +2,10 @@ import { db } from './firebase';
 import {
   collection,
   doc,
-  setDoc, // 登録
+  setDoc, // 登録(上書き)
+  addDoc, // 登録(上書き)
   getDoc, // 取得
+  getDocs, // 全て取得
   updateDoc // 更新
 } from "firebase/firestore";
 
@@ -14,6 +16,16 @@ export async function saveData(user, fieldName, userData) {
     const userRef = doc(userCollection, user.uid);
     await setDoc(userRef, userData);
     return userRef;
+  } catch (error) {
+    console.error("Firestoreへのデータ保存エラーby Firestore:", error);
+    throw error; // throw: 呼び出し元に例外処理を投げる
+  }
+}
+
+export async function addData(user, fieldName, userData) {
+  try {
+    const userCollection = collection(db, fieldName);
+    await addDoc(userCollection, userData);
   } catch (error) {
     console.error("Firestoreへのデータ保存エラーby Firestore:", error);
     throw error; // throw: 呼び出し元に例外処理を投げる
@@ -47,5 +59,20 @@ export async function updateData(userId, fieldName, updatedData) {
   }
 }
 
+// 全データ取得
+export async function getAllData(collectionName) {
+  try {
+    const allData = [];
+    const querySnapshot = await getDocs(collection(db, collectionName));
+    querySnapshot.forEach((doc) => {
+
+      allData.push(doc.data())
+    })
+    return allData;
+  } catch (error) {
+    console.error('ユーザーデータ取得エラーby Firestore', error);
+    throw error;
+  }
+}
 
 

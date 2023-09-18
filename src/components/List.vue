@@ -1,42 +1,56 @@
 <template>
   <h2>リスト</h2>
-  <div class="ly_article">
-    <div class="ly_article_inner" v-for="article in articles" :key="article.id">
-      <div class="bl_article">{{ article.title }}</div>
-      <div class="bl_article"><img :src="article.filePath" alt="Article Image"></div>
-      <div class="bl_article">{{ article.memo }}</div>
-    </div>
-  </div>
+  <v-container
+    class="fill-height"
+    fluid
+  >
+    <v-row>
+      <v-row>
+        <v-col cols="3" v-for="article in articles" :key="article.id">
+          <v-card>
+            <v-img
+              :src="article.filePath"
+              max-height="125"
+              cover
+              class="bg-grey-lighten-2"
+            ></v-img>
+            <v-card-title class="text-h6">
+              {{ article.title }}
+            </v-card-title>
+            <v-card-text class="text-h6">
+              {{ article.memo }}
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-row>
+  </v-container>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue'
-// import { fetchFirebase } from '../firebase/firestore'
+import { getAllData } from '@/firebase/firestore'
 
-const articles = ref([]); // Initialize with an empty array
+const articles = ref([]);
 
-// onMounted(() => {
-//   fetchFirebase()
-//     .then((data) => {
-//       articles.value = data
-//     })
-//     .catch((error) => {
-//       console.error('Error fetching data:', error);
-//     });
-// });
+onMounted(async () => {
+  try {
+    const data = await getAllData('articles'); // Replace 'articles' with your collection name
+    articles.value = data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+});
 </script>
 
+
 <style>
-h2 {
-  border-left: 10px solid blue;
-  padding-left: 5px;
-}
 
 .ly_article {
   display: flex;
   flex-wrap: wrap;
   padding: 10px;
-  max-width: 1000px;
+  max-width: 200px;
   margin: auto;
 }
 .ly_article_inner {

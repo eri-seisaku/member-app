@@ -4,7 +4,7 @@
     <v-row>
       <v-col cols="12">
 
-        <h2 class="text-h4">
+        <h2 class="text-h5">
           加入資格の確認について
         </h2>
         <p class="mt-8">

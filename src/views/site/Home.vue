@@ -8,14 +8,10 @@
       <div v-else>
         <button @click="toList">戻る</button>
       </div>
-
-      <div v-if="displayList.value">
-        <List></List>
-      </div>
-      <div v-else>
-        <Create></Create>
-      </div>
+      <List></List>
+      <Create></Create>
     </div>
+
   </div>
 </template>
 
@@ -36,6 +32,20 @@ const toCreate = () => {
   displayCreate.value = true
 };
 
+//
+// import { onMounted } from 'vue'
+// import { getAllData } from '@/firebase/firestore'
+
+// const articles = ref([]); // Initialize with an empty array
+
+// onMounted(async () => {
+//   try {
+//     const data = await getAllData('articles'); // Replace 'articles' with your collection name
+//     articles.value = data;
+//   } catch (error) {
+//     console.error('Error fetching data:', error);
+//   }
+// });
 </script>
 
 <style>
