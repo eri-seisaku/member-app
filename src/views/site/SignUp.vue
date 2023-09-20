@@ -1,6 +1,6 @@
 <template>
-  <v-container class="fill-height" fluid>
-    <v-row align="center">
+  <v-container>
+    <v-row>
       <v-col cols="12">
         <h2 class="text-h4">{{ confirmMode ? '確認画面' : '登録フォーム' }}</h2>
         <p class="mt-8 mb-8">{{ confirmMode ? '問題なければ送信を押してください' : '情報を入力してください' }}</p>
@@ -80,7 +80,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useField, useForm } from 'vee-validate';
-import { validationSchema } from '../../validate/validate';
+import { validationSchema } from '@/validate/validate';
 import { useRouter } from 'vue-router';
 import { signUp } from '../../firebase/auth';
 import { saveData } from '../../firebase/firestore';

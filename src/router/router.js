@@ -33,6 +33,11 @@ const siteRoutes = [
         name: 'List',
         component: () => import('@/views/site/List.vue'),
       },
+      {
+        path: '/portfolio',
+        name: 'Portfolio',
+        component: () => import('@/views/site/Portfolio.vue'),
+      },
     ],
   },
 ];

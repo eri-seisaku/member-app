@@ -10,14 +10,17 @@
     prepend-inner-icon="mdi-lock-outline"
     variant="outlined"
     @click:append-inner="visible = !visible"
+    :error-messages="field.errorMessage.value"
     v-model="parentValue"
   ></v-text-field>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
+import { useField } from 'vee-validate';
 
 const visible = ref(false);
+const field = useField('password');
 
 // 親から子へ
 const props = defineProps({

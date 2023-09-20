@@ -1,6 +1,6 @@
 <template>
   <!-- <v-container class="fill-height" fluid> -->
-  <v-container class="mx-auto d-flex align-center justify-center">
+  <v-container>
     <v-row>
       <v-col cols="12">
 
@@ -18,7 +18,6 @@
           ></v-checkbox>
         </div>
         <v-btn
-          class="mr-4"
           type="submit"
           variant="outlined"
           :href="isAllChecked ? '/signup' : null"
