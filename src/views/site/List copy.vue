@@ -3,29 +3,13 @@
   <v-data-table
     v-model:items-per-page="itemsPerPage"
     :headers="headers"
-    :items="members"
+    :items="desserts"
     item-value="name"
     class="my-table"
 ></v-data-table>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { getAllData } from '@/firebase/firestore';
-import { addDoc } from 'firebase/firestore';
-
-onMounted(async () => {
-  try {
-    // Firestoreからユーザーの情報を取得し、userDataにセット
-    const allDoc = await getAllData("members");
-
-    console.log(allDoc);
-
-  } catch (error) {
-    console.error('ユーザーデータ取得エラー', error);
-  }
-});
-
 const itemsPerPage = 5;
 const headers = [
   {
@@ -41,7 +25,7 @@ const headers = [
   { title: '専門デザイン分野', align: 'end', key: 'specialty' },
 ];
 
-const members = [
+const desserts = [
   {
     officeName: 'デジタル会社',
     name: '苗字 名前',

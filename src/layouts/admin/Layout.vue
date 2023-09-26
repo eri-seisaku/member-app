@@ -66,7 +66,7 @@ const title = computed(() => {
 
 const drawer = ref(null)
 // firebase
-import { auth } from '../../firebase/firebase';
+import { auth } from '@/firebase/firebase';
 const user = auth.currentUser;
 
 const navMenus = [
@@ -83,7 +83,7 @@ const navMenus = [
   {
     icon: 'mdi-file-account',
     title: 'ポートフォリオ申請',
-    to: '/admin/portfolio'
+    to: '/admin/post'
   },
 ];
 </script>

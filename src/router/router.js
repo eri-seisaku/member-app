@@ -12,31 +12,25 @@ const siteRoutes = [
         path: '/',
         name: 'Home',
         component: () => import('@/views/site/Home.vue'),
+        meta: { title: 'HOME'}
       },
       {
         path: '/check',
         name: 'Check',
         component: () => import('@/views/site/Check.vue'),
+        meta: { title: 'CHECK'}
       },
       {
         path: '/signup',
         name: 'SignUp',
         component: () => import('@/views/site/SignUp.vue'),
+        meta: { title: 'SIGNUP'}
       },
-      // {
-      //   path: '/login',
-      //   name: 'Login',
-      //   component: () => import('@/views/site/Login.vue'),
-      // },
       {
         path: '/list',
         name: 'List',
         component: () => import('@/views/site/List.vue'),
-      },
-      {
-        path: '/portfolio',
-        name: 'Portfolio',
-        component: () => import('@/views/site/Portfolio.vue'),
+        meta: { title: 'LIST'}
       },
     ],
   },
@@ -62,9 +56,14 @@ const adminRoutes = [
         meta: { title: 'PROFILE'}
       },
       {
-        path: '/admin/portfolio',
-        component: () => import('@/views/admin/PostProfile.vue'),
-        meta: { title: 'PORTFOLIO'}
+        path: '/admin/post',
+        component: () => import('@/views/admin/Post.vue'),
+        meta: { title: 'POST'}
+      },
+      {
+        path: '/admin/test',
+        component: () => import('@/views/admin/Test.vue'),
+        meta: { title: 'Test'}
       },
     ],
   },

@@ -7,6 +7,8 @@
           申請後、事業所より承認され次第、担当者がWEBページに反映させます。<br>
           変更を保存後、最下部の「ポートフォリオを申請する」ボタンを押してください。
         </p>
+        <List></List>
+        <Create></Create>
         <!-- File upload -->
         <div
           class="drop_area"
@@ -50,6 +52,11 @@
 <script setup>
 import { ref } from 'vue';
 import { validationSchema } from '../../validate/validate';
+
+import List from '@/components/List.vue';
+import Create from '@/components/Create.vue';
+
+
 const imageError = ref('');
 const files = ref([]);
 

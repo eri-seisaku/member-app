@@ -35,9 +35,9 @@
 import { reactive, computed } from 'vue';
 
 const checkboxItems = reactive([
-  { label: '質問1: ○○○○○○○○○○○○○○', value: false },
-  { label: '質問2: ○○○○○○○○○○○○○○', value: false },
-  { label: '質問3: ○○○○○○○○○○○○○○', value: false },
+  { label: '質問1: 税務署に確定申告書を提出している', value: false },
+  { label: '質問2: 確定申告書の職業欄に当協会に加入出来る職業名が記載されている', value: false },
+  { label: '質問3: 業務として制作された作品のプリントコピーを添付出来る', value: false },
 ]);
 
 const isAllChecked = computed(() => {
