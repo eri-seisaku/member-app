@@ -51,7 +51,7 @@
               variant="outlined"
               class="ml-6"
               size="large"
-              :disabled="zip_code.errorMessage.value || !zip_code.value.value"
+              :disabled="!!zip_code.errorMessage.value || !zip_code.value.value"
               @click="fetchAddress"
             >
               住所検索
@@ -67,14 +67,9 @@
             <span class="bg-red-accent-4 rounded text-subtitle-2 pa-1 ml-3">必須</span>
           </v-col>
           <v-col cols="12" md="9">
-            <!-- <v-text-field
-              v-model="state.value.value"
-              :error-messages="state.errorMessage.value"
-              variant="outlined"
-            ></v-text-field> -->
             <v-select
               v-model="state.value.value"
-              :items="prefectures"
+              :items="states"
               :error-messages="state.errorMessage.value"
               label="選択してください"
               variant="outlined"
@@ -101,9 +96,9 @@
           </v-col>
           <v-col cols="12" md="9">
             <v-select
-              v-model="select.value.value"
+              v-model="specialty.value.value"
               :items="specialties"
-              :error-messages="select.errorMessage.value"
+              :error-messages="specialty.errorMessage.value"
               label="選択してください"
               variant="outlined"
             ></v-select>
@@ -124,60 +119,63 @@
             ></v-checkbox>
           </v-col>
         </v-row>
-        <v-row>
-          <v-col cols="12">
-            <v-btn
-              class="me-4"
-              type="submit"
-              variant="outlined"
-            >
-              確認
-            </v-btn>
-          </v-col>
-        </v-row>
       </div>
       <div v-else>
         <Confirm :value="inputValues" />
-        <v-btn @click="back" variant="outlined">
-          戻る
-        </v-btn>
       </div>
+      <v-row>
+        <v-col cols="12" md="2" v-if="confirmMode">
+          <v-btn @click="back" variant="outlined">
+            戻る
+          </v-btn>
+        </v-col>
+        <v-col cols="12" md="2">
+          <v-btn
+            class="me-4"
+            type="submit"
+            variant="outlined"
+          >
+            {{ confirmMode ? '送信' : '確認' }}
+          </v-btn>
+        </v-col>
+      </v-row>
     </form>
   </v-container>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+// Vue
+import { ref } from 'vue';
+// Vee-Validate
 import { useField, useForm } from 'vee-validate';
 import { validationSchema } from '@/validate/validate';
+// Axios
+import axios from 'axios';
+import axiosJsonpAdapter from 'axios-jsonp'
+// Router
 import { useRouter } from 'vue-router';
+// Firebase
 import { signUp } from '@/firebase/auth';
 import { saveData } from '@/firebase/firestore';
 // Form List Items
-import { prefectures } from '@/utils/prefectures.js';
+import { states, setEightArea } from '@/utils/states.js';
 import { specialties } from '@/utils/specialties.js';
-
+// Component
 import Confirm from '@/views/site/signup/Confirm.vue';
+
+// 共通データ
 const inputValues = ref({});
-
-// const props = defineProps({
-//   value: Object, // データはオブジェクトとして受け取る
-// });
-
+// 郵便番号検索時のエラーメッセージ
 const errorMessage = ref();
-
-
 // Routerのインスタンスを作成
 const router = useRouter();
-
 // 確認画面の切り替え
 const confirmMode = ref(false);
-
 // バリデーションの設定
 const { handleSubmit } = useForm({
   validationSchema,
 });
-
+// フィールドとフォームを紐づける
 const textFields = [
   { key: 'name', field: useField('name'), label: 'お名前' },
   { key: 'office_name', field: useField('office_name'), label: '事務所名' },
@@ -188,30 +186,23 @@ const textFields = [
 const state = useField('state');
 const address = useField('address');
 const zip_code = useField('zip_code');
-const select = useField('select');
+const specialty = useField('specialty');
 const checkbox = useField('checkbox');
 
-const filteredFields = computed(() => {
-  return fields.filter(fieldInfo => fieldInfo.key !== 'password');
-});
-
-import axios from 'axios';
-import axiosJsonpAdapter from 'axios-jsonp'
+// 郵便番号から住所検索
 const fetchAddress = async () => {
   try {
     const res = await axios.get(`https://api.zipaddress.net/?zipcode=${zip_code.value.value}`, {adapter: axiosJsonpAdapter});
 
-    console.log(res); // 全て
-    console.log(res.data.message); // Address not found
-    console.log(res.data.code); // 404
-    console.log(res.status); // 全て
+    // デバック
+    // console.log(res); // 全て
+    // console.log(res.data.message); // エラーメッセージ
+    // console.log(res.data.code); // 404
+    // console.log(res.status); // 200
     // console.log(res.data.pref); // 都道府県
     // console.log(res.data.address); // 町名まで
     // console.log(res.data.city); // ○○群○○
     // console.log(res.data.town); // 町名のみ
-
-
-
     if (res.status === 200) {
       if (res.data.code !== 404) {
         errorMessage.value = '';
@@ -223,29 +214,40 @@ const fetchAddress = async () => {
     }
   } catch (error) {
     console.error('郵便番号検索エラー:', error);
-    errorMessage.value = '郵便番号検索中にエラーが発生しました'; // エラーメッセージを設定
+    errorMessage.value = '郵便番号検索中にエラーが発生しました';
   }
 };
 
-
+// 送信処理
 const submit = handleSubmit(async (values) => {
   try {
     if (!confirmMode.value) {
-      // 確認画面に切り替え
-      confirmMode.value = true;
-      inputValues.value = values;
+      confirmMode.value = true; // 確認画面に切り替え
+      inputValues.value = values; // 確認画面にデータを渡す
     } else {
       // 送信処理
       if (confirmMode.value) {
+
+        const area = await setEightArea(values.state);
+        const user = await signUp(values.email, values.password);
+
+        console.log(user.uid); // デバック
+
+        // DBに保存するデータ
         const userData = {
+          member_id: user.uid,
           name: values.name,
+          office_name: values.office_name,
           phone: values.phone,
           email: values.email,
-          select: values.select,
-          createdAt: new Date(),
+          zip_code: values.zip_code,
+          state: values.state,
+          address: values.address,
+          eight_area: area,
+          specialty: values.specialty,
+          join_data: new Date(),
         };
 
-        const user = await signUp(values.email, values.password);
         await saveData(user, "members", userData);
 
         // 登録が成功した場合
@@ -259,8 +261,8 @@ const submit = handleSubmit(async (values) => {
   }
 });
 
+// 画面切り替え
 const back = () => {
-  // フォームモードに戻る
   confirmMode.value = false;
 };
 

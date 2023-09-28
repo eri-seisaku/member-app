@@ -19,7 +19,8 @@ export default createVuetify({
           user: '#600f18',
           white: '#fff',
           gray: '#808080',
-          background: "#f5f5f5"
+          background: "#f5f5f5",
+          anchor: '#000000',
         },
       },
     },

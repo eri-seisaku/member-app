@@ -32,6 +32,12 @@ const siteRoutes = [
         component: () => import('@/views/site/List.vue'),
         meta: { title: 'LIST'}
       },
+      {
+        path: '/members/:userId',
+        name: 'Detail',
+        component: () => import('@/views/site/Detail.vue'),
+        meta: { title: 'DETAIL'}
+      },
     ],
   },
 ];
@@ -115,5 +121,3 @@ router.afterEach((to) => {
 });
 
 export default router;
-
-

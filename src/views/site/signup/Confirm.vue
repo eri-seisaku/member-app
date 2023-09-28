@@ -31,10 +31,11 @@ const transformedData = computed(() => {
   transformed['事務所名'] = data['office_name'];
   transformed['電話番号'] = data['phone'];
   transformed['メールアドレス'] = data['email'];
-  transformed['パスワード'] = data['password'];
+  transformed['パスワード'] = '**********';
+  transformed['郵便番号'] = data['zip_code'];
   transformed['都道府県'] = data['state'];
   transformed['住所'] = data['address'];
-  transformed['カテゴリ'] = data['select'];
+  transformed['カテゴリ'] = data['specialty'];
   transformed['利用規約'] = data['checkbox'] === '1' ? '同意します' : '';
 
   return transformed;
@@ -49,6 +50,6 @@ const transformedData = computed(() => {
   border-bottom: 1px solid #ddd;
 }
 .confirm:last-of-type {
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 </style>

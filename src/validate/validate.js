@@ -30,7 +30,7 @@ export const validationSchema = object({
     .min(8, 'パスワードは少なくとも8文字以上である必要があります')
     .max(64, 'パスワードは64文字以下である必要があります')
     .required(),
-  select: string().required('選択してください。'),
+  specialty: string().required('選択してください。'), // selectから変更
   checkbox: string().oneOf(['1'], 'チェックする必要があります。').required(),
   image: mixed()
     .test('fileType', 'PNGまたはJPG形式の画像をアップロードしてください', (value) => {

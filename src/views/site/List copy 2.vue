@@ -4,15 +4,12 @@
     v-model:items-per-page="itemsPerPage"
     :headers="headers"
     :items="members"
+    item-value="name"
+    class="my-table"
     :loading="loadingMembers"
   >
-    <template v-slot:item.url="{ item }">
-      <a :href="item.columns.url" class="text-anchor">
-        <v-icon> mdi-account-edit </v-icon>
-        Portfolio
-      </a>
-      <!-- {{ item }} -->
-      <!-- {{ item.columns.url }} -->
+    <template #item.url="{ item }">
+      <a :href="item.url">詳細</a>
     </template>
   </v-data-table>
 
@@ -27,18 +24,26 @@ const loadingMembers = ref(true);
 
 onMounted(async () => {
   try {
+    // Firestoreからユーザーの情報を取得し、userDataにセット
     const allDoc = await getAllData("members");
 
-    members.value = allDoc.map(doc => {
+    console.log(allDoc); // デバック
+
+    // allDocからmembersにデータを追加
+    allDoc.forEach(doc => {
 
       const timestamp = doc.join_data;
       const date = timestamp.toDate();
       const year = date.getFullYear();
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0'); // +1は月は0から始まるため+1する, 2は月の前に0をつけるかどうか
       const day = date.getDate().toString().padStart(2, '0');
       const formattedDate = `${year}年${month}月${day}日`;
+      console.log(formattedDate);
 
-      return {
+      // uid.value.push({uid: doc.member_id});
+      // console.log(uid.value[0].uid);
+
+      members.value.push({
         url: `/members/${doc.member_id}`,
         office_name: doc.office_name,
         name: doc.name,
@@ -46,9 +51,8 @@ onMounted(async () => {
         state: doc.state,
         join_data: formattedDate,
         specialty: doc.specialty,
-      };
+      });
     });
-
     loadingMembers.value = false;
 
   } catch (error) {
