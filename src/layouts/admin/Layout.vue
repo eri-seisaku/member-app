@@ -1,13 +1,28 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer v-model="drawer" color="user">
+    <v-navigation-drawer
+      v-model="drawer"
+      color="grey-darken-1"
+    >
+      <!-- LOGO -->
+      <v-sheet color="grey-darken-1" class="pa-4" :height="64">
+        <v-img
+          class="mx-auto"
+          sizes="128"
+          src="@/assets/logo-vuetify.svg"
+        ></v-img>
+      </v-sheet>
+
+      <v-divider></v-divider>
+
+      <!-- USER -->
       <v-sheet
-        color="user"
-        class="pa-4"
+        color="grey-darken-1"
+        class="pa-4 text-center"
       >
         <v-avatar
           class="mb-4"
-          color="grey-darken-1"
+          color="white"
           size="64"
         ></v-avatar>
 
@@ -16,7 +31,7 @@
 
       <v-divider></v-divider>
 
-      <v-list>
+      <v-list nav dense>
         <v-list-item
           v-for="menu in navMenus"
           :key="menu.title"

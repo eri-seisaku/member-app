@@ -22,6 +22,29 @@
             <v-text-field
               v-model="fieldInfo.field.value.value"
               :error-messages="fieldInfo.field.errorMessage.value"
+              persistent-hint
+              :hint="fieldInfo.hint"
+              variant="outlined"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" md="3" align-self="center" class="mb-3">
+            <label class="text-subtitle-1 text-medium-emphasis">
+              パスワード
+              <span class="bg-red-accent-4 rounded text-subtitle-2 pa-1 ml-3">必須</span>
+            </label>
+          </v-col>
+          <v-col cols="12" md="9">
+            <v-text-field
+              v-model="password.value.value"
+              :error-messages="password.errorMessage.value"
+              persistent-hint
+              hint="大文字、小文字、数字、特殊文字(@、$、!、%、*、?、&)の8文字以上"
+              :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+              :type="visible ? 'text' : 'password'"
+              @click:append-inner="visible = !visible"
+              prepend-inner-icon="mdi-lock-outline"
               variant="outlined"
             ></v-text-field>
           </v-col>
@@ -30,8 +53,7 @@
           <v-col cols="12" md="3" align-self="center" class="mb-3">
             <label class="text-subtitle-1 text-medium-emphasis">
               郵便番号
-              <span class="bg-red-accent-4 rounded text-subtitle-2 pa-1 ml-3">必須</span><br>
-              <span class="text-caption">※数字のみ</span>
+              <span class="bg-red-accent-4 rounded text-subtitle-2 pa-1 ml-3">必須</span>
             </label>
           </v-col>
           <v-col cols="12" md="5" class="d-flex">
@@ -43,8 +65,10 @@
             ></v-text-field> -->
             <v-text-field
               v-model="zip_code.value.value"
-              density="compact"
               :error-messages="zip_code.errorMessage.value"
+              persistent-hint
+              hint="ハイフンなし数字のみ"
+              density="compact"
               variant="outlined"
             ></v-text-field>
             <v-btn
@@ -124,6 +148,14 @@
         <Confirm :value="inputValues" />
       </div>
       <v-row>
+        <v-col cols="12" md="12"  v-if="errorMessage">
+          <v-alert
+            border="start"
+            border-color="error"
+          >
+            {{ errorMessage }}
+          </v-alert>
+        </v-col>
         <v-col cols="12" md="2" v-if="confirmMode">
           <v-btn @click="back" variant="outlined">
             戻る
@@ -144,20 +176,14 @@
 </template>
 
 <script setup>
-// Vue
 import { ref } from 'vue';
-// Vee-Validate
 import { useField, useForm } from 'vee-validate';
 import { validationSchema } from '@/validate/validate';
-// Axios
 import axios from 'axios';
 import axiosJsonpAdapter from 'axios-jsonp'
-// Router
 import { useRouter } from 'vue-router';
-// Firebase
 import { signUp } from '@/firebase/auth';
 import { saveData } from '@/firebase/firestore';
-// Form List Items
 import { states, setEightArea } from '@/utils/states.js';
 import { specialties } from '@/utils/specialties.js';
 // Component
@@ -177,12 +203,14 @@ const { handleSubmit } = useForm({
 });
 // フィールドとフォームを紐づける
 const textFields = [
-  { key: 'name', field: useField('name'), label: 'お名前' },
-  { key: 'office_name', field: useField('office_name'), label: '事務所名' },
-  { key: 'phone', field: useField('phone'), label: '電話番号' },
-  { key: 'email', field: useField('email'), label: 'メールアドレス' },
-  { key: 'password', field: useField('password'), label: 'パスワード' },
+  { key: 'name', field: useField('name'), label: 'お名前', hint: '例) 苗字名前' },
+  { key: 'office_name', field: useField('office_name'), label: '事務所名', hint: '' },
+  { key: 'phone', field: useField('phone'), label: '電話番号', hint: '例) 09000000000' },
+  { key: 'email', field: useField('email'), label: 'メールアドレス', hint: '例) example@mail.com' },
+  // { key: 'password', field: useField('password'), label: 'パスワード', hint: '' },
 ];
+const visible = ref(false); // password表示非表示
+const password = useField('password');
 const state = useField('state');
 const address = useField('address');
 const zip_code = useField('zip_code');
@@ -255,15 +283,15 @@ const submit = handleSubmit(async (values) => {
       }
     }
   } catch (error) {
-    // エラーが発生した場合
-    console.error("ユーザー登録エラー:", error.code, error.message);
-    // エラーメッセージを表示するか、必要な処理を追加する
+    errorMessage.value = error;
+    console.error("エラーが発生しました: ", error);
   }
 });
 
 // 画面切り替え
 const back = () => {
   confirmMode.value = false;
+  errorMessage.value = "";
 };
 
 </script>

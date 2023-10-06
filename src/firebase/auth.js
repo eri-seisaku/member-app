@@ -8,15 +8,29 @@ import {
   updateEmail, // email更新
   updatePassword, // password更新
   sendEmailVerification, // メールアドレス変更後確認メール送信
-  sendPasswordResetEmail // パスワードの再設定メール送信
+  sendPasswordResetEmail, // パスワードの再設定メール送信
+  fetchSignInMethodsForEmail // 重複確認
 } from "firebase/auth";
+
+// 重複チェック
+async function checkEmailDuplicate(email) {
+  const providers = await fetchSignInMethodsForEmail(auth, email);
+  return providers;
+}
 
 // 新規登録処理
 export async function signUp(email, password) {
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-    return user;
+    // メールアドレスの重複確認
+    const providers = await checkEmailDuplicate(email);
+
+    if (providers && providers.length > 0) {
+      throw new Error("このメールアドレスは既に登録されています。");
+    } else {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      return user;
+    }
   } catch (error) {
     console.error("ユーザー登録エラーby Auth:", error.code, error.message);
     throw error; // throw: 呼び出し元に例外処理を投げる
@@ -137,4 +151,21 @@ export async function resetPassword(email) {
   }
 }
 
+
+// パスワード再発行
+export async function reissuePassword(email) {
+  try {
+    // メールアドレスが登録されているか確認
+    const providers = await checkEmailDuplicate(email);
+
+    if (providers && providers.length > 0) {
+      await sendPasswordResetEmail(auth, email);
+    } else {
+      throw new Error("このメールアドレスは登録されていません。");
+    }
+  } catch (error) {
+    console.error("パスワードの再設定エラーby Auth:", error);
+    throw error;
+  }
+}
 

@@ -1,4 +1,8 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {
+  createRouter,
+  createWebHistory,
+  START_LOCATION // 遷移を判定するため
+} from 'vue-router'
 import { auth } from '../firebase/firebase';
 
 
@@ -24,7 +28,12 @@ const siteRoutes = [
         path: '/signup',
         name: 'SignUp',
         component: () => import('@/views/site/SignUp.vue'),
-        meta: { title: 'SIGNUP'}
+        meta: { title: 'SIGNUP'},
+        beforeEnter: (to, from) => {
+          if (from === START_LOCATION) {
+            return '/check'
+          }
+        },
       },
       {
         path: '/list',
@@ -56,7 +65,6 @@ const adminRoutes = [
         meta: { title: 'DASHBOARD'}
       },
       {
-        // path: '/admin/profile',
         path: '/admin/profile/:userId',
         component: () => import('@/views/admin/Profile.vue'),
         meta: { title: 'PROFILE'}
@@ -69,7 +77,7 @@ const adminRoutes = [
       {
         path: '/admin/test',
         component: () => import('@/views/admin/Test.vue'),
-        meta: { title: 'Test'}
+        meta: { title: 'TEST'}
       },
     ],
   },
@@ -86,6 +94,12 @@ const loginRoutes = [
         name: 'Login',
         component: () => import('@/views/login/Login.vue'),
         meta: { title: 'LOGIN'}
+      },
+      {
+        path: '/password_request',
+        name: 'Reissue',
+        component: () => import('@/views/login/Reissue.vue'),
+        meta: { title: 'Reissue'}
       },
     ],
   },
@@ -121,3 +135,6 @@ router.afterEach((to) => {
 });
 
 export default router;
+
+
+

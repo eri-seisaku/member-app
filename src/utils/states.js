@@ -1,3 +1,4 @@
+// 都道府県
 export const states = [
   '北海道',
   '青森県',
@@ -48,6 +49,7 @@ export const states = [
   '沖縄県',
 ];
 
+// 八区分
 export const eightAreas = {
   '北海道': '北海道',
   '青森県': '東北',
@@ -97,7 +99,6 @@ export const eightAreas = {
   '鹿児島県': '九州沖縄',
   '沖縄県': '九州沖縄',
 };
-
 
 // 都道府県を八地方区分する
 export function setEightArea(state) {

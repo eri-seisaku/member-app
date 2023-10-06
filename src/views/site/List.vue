@@ -1,21 +1,33 @@
 <template>
   <h2 class="text-h5">加入リスト</h2>
-  <v-data-table
-    v-model:items-per-page="itemsPerPage"
-    :headers="headers"
-    :items="members"
-    :loading="loadingMembers"
-  >
-    <template v-slot:item.url="{ item }">
-      <a :href="item.columns.url" class="text-anchor">
-        <v-icon> mdi-account-edit </v-icon>
-        Portfolio
-      </a>
-      <!-- {{ item }} -->
-      <!-- {{ item.columns.url }} -->
-    </template>
-  </v-data-table>
 
+  <div class="mt-8">
+    <v-text-field
+      v-model="search"
+      append-icon="mdi-magnify"
+      label="キーワード"
+      variant="outlined"
+      single-line
+      hide-details
+    ></v-text-field>
+    <!-- hide-detailsは余白 -->
+    <v-data-table
+      v-model:items-per-page="itemsPerPage"
+      :headers="headers"
+      :items="members"
+      :loading="loadingMembers"
+      :search="search"
+    >
+      <template v-slot:item.url="{ item }">
+        <a :href="item.columns.url" class="text-anchor">
+          <v-icon> mdi-account-edit </v-icon>
+          Portfolio
+        </a>
+        <!-- {{ item }} -->
+        <!-- {{ item.columns.url }} -->
+      </template>
+    </v-data-table>
+  </div>
 </template>
 
 <script setup>
@@ -23,6 +35,7 @@ import { ref, onMounted } from 'vue';
 import { getAllData } from '@/firebase/firestore';
 
 const members = ref([]);
+const search = ref('');
 const loadingMembers = ref(true);
 
 onMounted(async () => {

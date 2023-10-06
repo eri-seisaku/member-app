@@ -1,3 +1,4 @@
+// 専門カテゴリ
 export const specialties = [
   'グラフィックデザイン',
   'Webデザイン',

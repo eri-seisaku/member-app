@@ -3,13 +3,13 @@ import {
   collection,
   doc,
   setDoc, // 登録(上書き)
-  addDoc, // 登録(上書き)
+  addDoc, // 登録(追加)
   getDoc, // 取得
   getDocs, // 全て取得
   updateDoc // 更新
 } from "firebase/firestore";
 
-// 登録
+// 登録(上書き)
 export async function saveData(user, fieldName, userData) {
   try {
     const userCollection = collection(db, fieldName);
@@ -22,6 +22,7 @@ export async function saveData(user, fieldName, userData) {
   }
 }
 
+// 登録(追加)
 export async function addData(user, fieldName, userData) {
   try {
     const userCollection = collection(db, fieldName);

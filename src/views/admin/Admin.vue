@@ -1,82 +1,87 @@
 <template>
-  <v-container class="fill-height" fluid>
+  <v-container>
     <v-row>
-      <v-col>
-        <p class="mt-8 mb-8">
-          ここには何を表示するのか分かりません。<br>
-          管理者の場合はここにお知らせ等が表示されます。
-        </p>
-        <form @submit.prevent="submit">
-          <Text
-            type="text"
-            label="aaa"
-            :required="false"
-            :disabled="false"
-
-          />
-          <Text
-            type="text"
-            label="bbbb"
-            :required="true"
-            :disabled="false"
-
-          />
-          <v-btn type="submit">sousin</v-btn>
-        </form>
-        <!-- ---------------------------------------- -->
-        <v-btn @click="ParentDialog = true">Toggle Dialog</v-btn>
-        <Dialog v-model:dialog="ParentDialog" :size="500">
-          <template v-slot:toolbarTitle>
-            <v-toolbar
-              color="primary"
-              title="再認証ログインフォーム"
-            ></v-toolbar>
-          </template>
-          <template v-slot:text>
-            <div>
-              <p class="mb-4">メールアドレスを変更する場合は再度ログインしてください。※ログインから日がたった時に表示されます。</p>
-              <form @submit.prevent="submit">
-                <Text
-                  label="メールアドレス"
-                  type="email"
-                  :disabled="false"
-                  v-model:inputValue="email"
-                />
-                <Password
-                  label="パスワード"
-                  v-model:inputValue="password"
-                />
-              </form>
-              <v-alert>
-                {{ errorMessage }}
-              </v-alert>
-            </div>
-          </template>
-
-          <template v-slot:actions>
-            <v-btn variant="outlined">Toggle Dialog</v-btn>
-          </template>
-
-        </Dialog>
-        <!-- ---------------------------------------- -->
-
+      <v-col cols="6" md="2" v-for="card in cards">
+        <HoverLinkCard
+          :url="card.url"
+          :icon="card.icon"
+          :title="card.title"
+        ></HoverLinkCard>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12" md="6">
+        <v-card variant="flat">
+          <!-- title -->
+          <v-toolbar color="grey-lighten-3">
+              <v-toolbar-title>NEWS</v-toolbar-title>
+          </v-toolbar>
+          <v-list lines="one" max-height="200">
+            <v-list-item
+              v-for="n in 9"
+              :key="n"
+              :title="'Item ' + n"
+              subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit"
+            ></v-list-item>
+          </v-list>
+        </v-card>
+      </v-col>
+      <v-col cols="12" md="6">
+        <v-card variant="flat">
+          <!-- title -->
+          <v-toolbar color="grey-lighten-3">
+              <v-toolbar-title>NEWS</v-toolbar-title>
+          </v-toolbar>
+          <v-list lines="one">
+            <v-list-item
+              v-for="n in 3"
+              :key="n"
+              :title="'Item ' + n"
+              subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit"
+            ></v-list-item>
+          </v-list>
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { auth } from '@/firebase/firebase';
-// 各コンポーネントインポート
-import Dialog from '@/components/Dialog.vue';
-import Password from '@/components/inputs/Password.vue';
-import Text from '@/components/inputs/Text.vue';
-const ParentDialog = ref(false);
-const user = auth.currentUser;
+// Components
+import HoverLinkCard from '@/components/cards/HoverLinkCard.vue';
 
-const email = ref('');
-const password = ref('');
-const errorMessage = ref('aaaa');
-
+const cards = [
+  {
+    url: '/admin',
+    icon: 'mdi-import',
+    title: 'IMPORT'
+  },
+  {
+    url: '/admin',
+    icon: 'mdi-account-cog',
+    title: 'USER'
+  },
+  {
+    url: '/admin',
+    icon: 'mdi-file-document-check-outline',
+    title: 'APPROVAL'
+  },
+  {
+    url: '',
+    icon: 'mdi-plus-box-outline',
+    title: 'EMPTY'
+  },
+  {
+    url: '',
+    icon: 'mdi-plus-box-outline',
+    title: 'EMPTY'
+  },
+  {
+    url: '',
+    icon: 'mdi-plus-box-outline',
+    title: 'EMPTY'
+  },
+];
 </script>
+
+

@@ -8,6 +8,11 @@
           max-width="228"
           src="@/assets/logo-vuetify.svg"
         ></v-img>
+        <!-- MESSAGE -->
+        <Alert
+          color="primary"
+          :text="sendMailMode ? 'メールアドレスを入力してください。パスワードのリセット手順が記されたメールが送信されます。' : 'メールの確認リンクをクリックし、ログインページを訪問してください。'"
+        />
         <!-- ERROR MESSAGE -->
         <Alert
           v-if="errorMessage"
@@ -15,38 +20,17 @@
           :text="errorMessage"
         />
         <!-- FORM -->
-        <Card max-width="448">
+        <Card max-width="448" v-if="sendMailMode">
           <template v-slot:content>
             <form @submit.prevent="submit">
               <label class="text-subtitle-1 text-medium-emphasis">メールアドレス</label>
 
               <v-text-field
                 required
+                type="email"
                 density="compact"
                 variant="outlined"
                 v-model="email"
-              ></v-text-field>
-
-              <label class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
-                パスワード
-
-                <a
-                  class="text-caption text-decoration-none text-blue"
-                  href="/password_request"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  パスワードをお忘れですか?</a>
-              </label>
-
-              <v-text-field
-                required
-                :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-                :type="visible ? 'text' : 'password'"
-                density="compact"
-                variant="outlined"
-                @click:append-inner="visible = !visible"
-                v-model="password"
               ></v-text-field>
 
               <v-btn
@@ -55,17 +39,17 @@
                 color="primary"
                 type="submit"
               >
-                ログイン
+                メールを送信
               </v-btn>
             </form>
           </template>
         </Card>
         <a
           class="text-blue text-decoration-none d-flex justify-center ma-4"
-          href="/check"
+          href="/login"
           rel="noopener noreferrer"
         >
-          会員登録へ <v-icon icon="mdi-chevron-right"></v-icon>
+          ログインへ <v-icon icon="mdi-chevron-right"></v-icon>
         </a>
       </v-col>
     </v-row>
@@ -75,39 +59,35 @@
 <script setup>
 // 初期値
 import { ref } from 'vue';
-const visible = ref(false);
 const email = ref('');
-const password = ref('');
 const errorMessage = ref('');
+const sendMailMode = ref(true);
 
 // router
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
+// firebase
+import { reissuePassword } from '@/firebase/auth';
+
 // Components
 import Card from '@/components/cards/Card.vue';
 import Alert from '@/components/Alert.vue';
 
-// firebase
-import { login } from '@/firebase/auth';
-
-// // store
-// import { useAuthStore } from '@/store/auth';
-// const authStore = useAuthStore();
-
 // ログイン処理
 const submit = async () => {
   try {
-    const user = await login(email.value, password.value);
+    await reissuePassword(email.value);
+    // フォームを非表示
+    sendMailMode.value = false;
 
-    // ストアのログイン状態とプロフィール情報を更新
-    // authStore.login({ id: user.uid, email: user.email });
-
-    // ログイン成功後の処理を追加
-    router.push('/admin');
   } catch (error) {
-    errorMessage.value = 'ログインに失敗しました。メールアドレスとパスワードを確認してください。';
+    errorMessage.value = error.message;
   }
 };
 
 </script>
+
+<style>
+
+</style>
