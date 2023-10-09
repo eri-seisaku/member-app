@@ -17,8 +17,8 @@
 </template>
 <script setup>
 import { ref } from 'vue';
-import { createFirebase } from '../firebase/storage';
-import { getCurrentUser } from '../firebase/auth';
+import { createFirebase } from '@/firebase/storage';
+import { getCurrentUser } from '@/firebase/auth';
 import { addData } from '@/firebase/firestore';
 
 

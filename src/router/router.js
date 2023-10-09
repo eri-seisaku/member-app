@@ -75,6 +75,11 @@ const adminRoutes = [
         meta: { title: 'POST'}
       },
       {
+        path: '/admin/edit',
+        component: () => import('@/views/admin/Edit.vue'),
+        meta: { title: 'EDIT'}
+      },
+      {
         path: '/admin/test',
         component: () => import('@/views/admin/Test.vue'),
         meta: { title: 'TEST'}

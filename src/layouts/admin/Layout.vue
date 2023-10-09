@@ -41,6 +41,18 @@
           :exact="true"
         ></v-list-item>
       </v-list>
+
+      <!-- LOG OUT BUTTON -->
+      <template v-slot:append>
+        <div class="pa-2">
+          <v-btn
+            block
+            @click="logoutUser"
+          >
+            Logout
+          </v-btn>
+        </div>
+      </template>
     </v-navigation-drawer>
 
     <v-app-bar
@@ -68,36 +80,44 @@
 </template>
 
 <script setup>
+// 初期値
 import { ref, computed } from "vue";
-import { useRoute } from "vue-router";
+const drawer = ref(null)
 
-// routerのインスタンスを作成
+// router
+import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
-
+const router = useRouter();
 // ページのタイトルを取得
 const title = computed(() => {
   return route.meta.title || 'Default Title';
 });
 
-const drawer = ref(null)
 // firebase
 import { auth } from '@/firebase/firebase';
+import { logout } from '@/firebase/auth';
 const user = auth.currentUser;
+// ログアウト処理
+const logoutUser = () => {
+  logout();
+  router.push('/');
+}
 
+// ナビメニュー
 const navMenus = [
   {
     icon: 'mdi-view-dashboard',
-    title: 'ダッシュボード',
+    title: 'DASHBOARD',
     to: "/admin"
   },
   {
     icon: 'mdi-account-cog',
-    title: 'プロフィール',
+    title: 'PROFILE',
     to: `/admin/profile/${user.uid}`
   },
   {
     icon: 'mdi-file-account',
-    title: 'ポートフォリオ申請',
+    title: 'POST PORTFOLIO',
     to: '/admin/post'
   },
 ];

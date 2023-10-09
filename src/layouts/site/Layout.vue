@@ -1,6 +1,5 @@
 <template>
   <v-app id="inspire">
-
     <v-app-bar app flat>
       <v-app-bar-nav-icon
         @click="drawer = !drawer"
@@ -51,17 +50,6 @@
     <v-main class="bg-grey-lighten-3">
       <v-container>
         <v-row>
-          <v-col cols="12">
-            <v-sheet
-              min-height="20vh"
-              rounded="lg"
-              class="pa-8 bg-grey-lighten-3"
-            >
-              <router-view name="header"></router-view>
-            </v-sheet>
-          </v-col>
-        </v-row>
-        <v-row>
           <v-col cols="12" md="10">
             <v-sheet
               min-height="70vh"
@@ -72,12 +60,23 @@
             </v-sheet>
           </v-col>
           <v-col cols="12" md="2">
-            <v-sheet
-              min-height="30vh"
-              rounded="lg"
-              class="pa-8"
-            >
-              <router-view name="sidebar"></router-view>
+            <v-sheet rounded="lg">
+              <!-- <v-list rounded="lg">
+                <v-list-item
+                  v-for="n in 5"
+                  :key="n"
+                  link
+                  :title="`List Item ${n}`"
+                ></v-list-item>
+
+                <v-divider class="my-2"></v-divider>
+
+                <v-list-item
+                  color="grey-lighten-4"
+                  link
+                  title="Refresh"
+                ></v-list-item>
+              </v-list> -->
             </v-sheet>
           </v-col>
         </v-row>
@@ -110,11 +109,11 @@ const navMenus = [
   },
   {
     title: 'CHECK',
-    to: "/check"
+    to: '/check'
   },
   {
     title: 'LIST',
-    to: "/list"
+    to: '/list'
   },
 ];
 

@@ -76,13 +76,13 @@
               class="ml-6"
               size="large"
               :disabled="!!zipCode.errorMessage.value || !zipCode.value.value"
-              @click="searchAddress"
+              @click="fetchAddress"
             >
               住所検索
             </v-btn>
           </v-col>
-          <v-col v-if="message" class="mt-3">
-            <p class="text-red-lighten-1 text-subtitle-2">{{ message }}</p>
+          <v-col v-if="errorMessage" class="mt-3">
+            <p class="text-red-lighten-1 text-subtitle-2">{{ errorMessage }}</p>
           </v-col>
         </v-row>
         <v-row>
@@ -177,23 +177,27 @@
 
 <script setup>
 import { ref } from 'vue';
-const inputValues = ref({});
-const message = ref(''); // 郵便番号検索時のメッセージ
-const errorMessage = ref('');
-const confirmMode = ref(false); // 確認画面の切り替え
-const visible = ref(false); // password表示非表示
-
-// component
-import Confirm from '@/views/site/signup/Confirm.vue';
-
-// router
-const router = useRouter();
-import { useRouter } from 'vue-router';
-
-// validation
 import { useField, useForm } from 'vee-validate';
 import { validationSchema } from '@/validate/validate';
+import axios from 'axios';
+import axiosJsonpAdapter from 'axios-jsonp'
+import { useRouter } from 'vue-router';
+import { signUp } from '@/firebase/auth';
+import { saveData } from '@/firebase/firestore';
+import { states, setEightArea } from '@/utils/states.js';
+import { specialties } from '@/utils/specialties.js';
+// Component
+import Confirm from '@/views/site/signup/Confirm.vue';
 
+// 共通データ
+const inputValues = ref({});
+// 郵便番号検索時のエラーメッセージ
+const errorMessage = ref();
+// Routerのインスタンスを作成
+const router = useRouter();
+// 確認画面の切り替え
+const confirmMode = ref(false);
+// バリデーションの設定
 const { handleSubmit } = useForm({
   validationSchema,
 });
@@ -203,7 +207,9 @@ const textFields = [
   { key: 'officeName', field: useField('officeName'), label: '事務所名', hint: '' },
   { key: 'phone', field: useField('phone'), label: '電話番号', hint: '例) 09000000000' },
   { key: 'email', field: useField('email'), label: 'メールアドレス', hint: '例) example@mail.com' },
+  // { key: 'password', field: useField('password'), label: 'パスワード', hint: '' },
 ];
+const visible = ref(false); // password表示非表示
 const password = useField('password');
 const state = useField('state');
 const address = useField('address');
@@ -211,22 +217,28 @@ const zipCode = useField('zipCode');
 const specialty = useField('specialty');
 const checkbox = useField('checkbox');
 
-import { signUp } from '@/firebase/auth';
-import { saveData } from '@/firebase/firestore';
-import { states, setEightArea } from '@/utils/states.js'; // 都道府県,八区分
-import { specialties } from '@/utils/specialties.js'; // 専門カテゴリ
-import { fetchAddress } from '@/utils/address.js'; // 住所取得
-
 // 郵便番号から住所検索
-const searchAddress = async () => {
+const fetchAddress = async () => {
   try {
-    const res = await fetchAddress(zipCode.value.value);
+    const res = await axios.get(`https://api.zipaddress.net/?zipcode=${zipCode.value.value}`, {adapter: axiosJsonpAdapter});
 
-    if (res === 200) {
-      message.value = '郵便番号が見つかりませんでした。';
-    } else if (typeof res === 'object') {
-      state.value.value = res.data.pref;
-      address.value.value = res.data.address;
+    // デバック
+    // console.log(res); // 全て
+    // console.log(res.data.message); // エラーメッセージ
+    // console.log(res.data.code); // 404
+    // console.log(res.status); // 200
+    // console.log(res.data.pref); // 都道府県
+    // console.log(res.data.address); // 町名まで
+    // console.log(res.data.city); // ○○群○○
+    // console.log(res.data.town); // 町名のみ
+    if (res.status === 200) {
+      if (res.data.code !== 404) {
+        errorMessage.value = '';
+        state.value.value = res.data.pref;
+        address.value.value = res.data.address;
+      } else{
+        errorMessage.value = '郵便番号検索でヒットしませんでした。';
+      }
     }
   } catch (error) {
     console.error('郵便番号検索エラー:', error);

@@ -84,8 +84,8 @@
 </template>
 <script setup>
 import { ref, computed } from 'vue'
-import { validationSchema } from '../validate/validate';
-import { uploadImageToStorage } from '../firebase/storage';
+import { validationSchema } from '@/validate/validate';
+// import { uploadImageToStorage } from '@/firebase/storage';
 
 // 親→子へ
 const props = defineProps({
@@ -218,4 +218,3 @@ const submit = async () => {
 
 
 </script>
-../validate/validate

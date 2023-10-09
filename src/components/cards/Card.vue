@@ -4,7 +4,9 @@
     :max-width="size"
     elevation="1"
   >
-    <slot name="content"></slot>
+    <v-card-item>
+      <slot name="content"></slot>
+    </v-card-item>
   </v-card>
 </template>
 

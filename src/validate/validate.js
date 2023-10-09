@@ -11,10 +11,11 @@ setLocale({
     url: ({ path }) => `${path}の形式ではありません。`,
   },
 });
+
 export const validationSchema = object({
   name: string().required(),
-  office_name: string().required(),
-  zip_code: string().length(7, '郵便番号はハイフンなしの7桁で入力する必要があります').required(),
+  officeName: string().required(),
+  zipCode: string().length(7, '郵便番号はハイフンなしの7桁で入力する必要があります').required(),
   state: string().required(),
   address: string().required(),
   phone: string()
@@ -42,8 +43,16 @@ export const validationSchema = object({
   website: string().url('有効なURLを入力してください。').nullable(),
 });
 
-export const testValidationSchema = object({
-  name: string().required(),
-  email: string().email().required(),
+export const portfolioValidationSchema = object({
+  title: string().required(),
+  comment: string(),
+  image: mixed()
+    .test('fileType', 'PNGまたはJPG形式の画像をアップロードしてください', (value) => {
+    if (!value) return true; // 値がない場合、バリデーションをスキップ
+    return (
+      value && (value.type === 'image/png' || value.type === 'image/jpeg')
+    );
+  }),
+  website: string().url('有効なURLを入力してください。').nullable(),
 });
 

@@ -44,7 +44,7 @@ onMounted(async () => {
 
     members.value = allDoc.map(doc => {
 
-      const timestamp = doc.join_data;
+      const timestamp = doc.joinData;
       const date = timestamp.toDate();
       const year = date.getFullYear();
       const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -52,12 +52,12 @@ onMounted(async () => {
       const formattedDate = `${year}年${month}月${day}日`;
 
       return {
-        url: `/members/${doc.member_id}`,
-        office_name: doc.office_name,
+        url: `/members/${doc.memberId}`,
+        officeName: doc.officeName,
         name: doc.name,
-        eight_area: doc.eight_area,
+        eightArea: doc.eightArea,
         state: doc.state,
-        join_data: formattedDate,
+        joinData: formattedDate,
         specialty: doc.specialty,
       };
     });
@@ -77,12 +77,12 @@ const headers = [
     title: '事業所名',
     align: 'start',
     sortable: false, // ソート
-    key: 'office_name',
+    key: 'officeName',
   },
   { title: '代表者名', align: 'end', key: 'name' },
-  { title: '地方', align: 'end', key: 'eight_area' },
+  { title: '地方', align: 'end', key: 'eightArea' },
   { title: '都道府県', align: 'end', key: 'state' },
-  { title: '入会年月日', align: 'end', key: 'join_data' },
+  { title: '入会年月日', align: 'end', key: 'joinData' },
   { title: '専門デザイン分野', align: 'end', key: 'specialty' },
   { title: 'URL', align: 'end', key: 'url' },
 ];

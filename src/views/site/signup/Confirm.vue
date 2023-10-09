@@ -28,11 +28,11 @@ const transformedData = computed(() => {
 
   // キー名を変更して新しいオブジェクトを生成
   transformed['名前'] = data['name'];
-  transformed['事務所名'] = data['office_name'];
+  transformed['事務所名'] = data['officeName'];
   transformed['電話番号'] = data['phone'];
   transformed['メールアドレス'] = data['email'];
   transformed['パスワード'] = '**********';
-  transformed['郵便番号'] = data['zip_code'];
+  transformed['郵便番号'] = data['zipCode'];
   transformed['都道府県'] = data['state'];
   transformed['住所'] = data['address'];
   transformed['カテゴリ'] = data['specialty'];
