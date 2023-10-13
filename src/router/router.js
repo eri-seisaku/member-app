@@ -84,6 +84,11 @@ const adminRoutes = [
         component: () => import('@/views/admin/Test.vue'),
         meta: { title: 'TEST'}
       },
+      { // ここから管理者用
+        path: '/admin/administrator/',
+        component: () => import('@/views/admin/administrator/Admin.vue'),
+        meta: { title: 'DASHBOARD'}
+      },
     ],
   },
 ];

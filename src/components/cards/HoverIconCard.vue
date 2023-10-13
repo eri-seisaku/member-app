@@ -3,7 +3,7 @@
     <template v-slot:default="{ isHovering, props }">
       <v-card
         v-bind="props"
-        :href="url"
+        :href="to"
         :color="isHovering ? 'blue-grey-lighten-5' : undefined"
         variant="flat"
         class="py-5 px-6 text-center mx-auto"
@@ -23,7 +23,7 @@
 <script setup>
 // 親から子へ
 const props = defineProps({
-  url: String,
+  to: String,
   icon: String,
   title: String
 });

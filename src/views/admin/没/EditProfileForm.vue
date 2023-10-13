@@ -61,7 +61,7 @@
   <v-row>
     <v-col cols="12">
       <v-btn
-        color="user"
+        color="member"
         type="submit"
         class="mb-4"
         form="profileForm"

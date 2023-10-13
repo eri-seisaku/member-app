@@ -56,7 +56,7 @@
 
 <script setup>
 // component
-import PasswordDialog from '@/views/admin/profile/PasswordDialog.vue';
+import PasswordDialog from '@/views/admin/child_profile/PasswordDialog.vue';
 
 // 初期値
 import { ref, onMounted } from 'vue';

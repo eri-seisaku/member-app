@@ -2,14 +2,18 @@
   <v-app id="inspire">
     <v-navigation-drawer
       v-model="drawer"
-      color="grey-darken-1"
+      :color="color"
     >
       <!-- LOGO -->
-      <v-sheet color="grey-darken-1" class="pa-4" :height="64">
+      <v-sheet
+        :color="color"
+        class="pa-4"
+        :height="64"
+      >
         <v-img
           class="mx-auto"
           sizes="128"
-          src="@/assets/logo-vuetify.svg"
+          src="@/assets/logo-vuetify-white.svg"
         ></v-img>
       </v-sheet>
 
@@ -17,7 +21,7 @@
 
       <!-- USER -->
       <v-sheet
-        color="grey-darken-1"
+        :color="color"
         class="pa-4 text-center"
       >
         <v-avatar
@@ -81,8 +85,10 @@
 
 <script setup>
 // 初期値
-import { ref, computed } from "vue";
-const drawer = ref(null)
+import { ref, computed, onMounted } from "vue";
+const drawer = ref(null);
+const color = ref('');
+const navMenus = ref([]);
 
 // router
 import { useRoute, useRouter } from "vue-router";
@@ -96,15 +102,65 @@ const title = computed(() => {
 // firebase
 import { auth } from '@/firebase/firebase';
 import { logout } from '@/firebase/auth';
+import { getData } from '@/firebase/firestore';
+
 const user = auth.currentUser;
+
+// 権限取得
+onMounted(async () => {
+  try {
+    const userDoc = await getData(user.uid, "members");
+
+    // console.log(userDoc.role); // 権限
+
+    const userRole = userDoc.role;
+
+    if (userRole === '管理者') {
+      color.value = 'administrator';
+      navMenus.value = administratorMenu;
+
+    } else {
+      color.value = 'member';
+      navMenus.value = memberMenu;
+
+    }
+  } catch (error) {
+    console.error('ユーザーデータ取得エラー', error);
+  }
+});
+
 // ログアウト処理
 const logoutUser = () => {
   logout();
   router.push('/');
 }
 
-// ナビメニュー
-const navMenus = [
+// 管理者ナビメニュー
+const administratorMenu = [
+  {
+    icon: 'mdi-view-dashboard',
+    title: 'DASHBOARD',
+    to: '/admin/administrator/'
+  },
+  {
+    icon: 'mdi-import',
+    title: 'IMPORT',
+    to: '/admin/administrator/import'
+  },
+  {
+    icon: 'mdi-file-account',
+    title: 'USER LIST',
+    to: '/admin/administrator/list'
+  },
+  {
+    icon: 'mdi-check-decagram-outline',
+    title: 'APPROVAL',
+    to: '/admin/administrator/approval'
+  },
+];
+
+// 組合員ナビメニュー
+const memberMenu = [
   {
     icon: 'mdi-view-dashboard',
     title: 'DASHBOARD',

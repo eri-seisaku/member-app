@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="6" md="2" v-for="card in cards" :key="card">
         <HoverIconCard
-          :url="card.url"
+          :to="card.to"
           :icon="card.icon"
           :title="card.title"
         ></HoverIconCard>
@@ -30,37 +30,37 @@
 
 <script setup>
 import { ref } from 'vue';
-// Components
+// components
 import HoverIconCard  from '@/components/cards/HoverIconCard.vue';
 
 const cards = [
   {
-    url: '/',
+    to: '/',
     icon: 'mdi-import',
     title: 'IMPORT'
   },
   {
-    url: '/admin',
+    to: '/admin',
     icon: 'mdi-account-cog',
     title: 'USER'
   },
   {
-    url: '/admin',
+    to: '/admin',
     icon: 'mdi-file-document-check-outline',
     title: 'APPROVAL'
   },
   {
-    url: '',
+    to: '',
     icon: 'mdi-plus-box-outline',
     title: 'EMPTY'
   },
   {
-    url: '',
+    to: '',
     icon: 'mdi-plus-box-outline',
     title: 'EMPTY'
   },
   {
-    url: '',
+    to: '',
     icon: 'mdi-plus-box-outline',
     title: 'EMPTY'
   },

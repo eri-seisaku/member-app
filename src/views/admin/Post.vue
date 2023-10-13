@@ -14,6 +14,6 @@
 </template>
 
 <script setup>
-import PostForm from '@/views/admin/post/PostForm.vue';
-import List from '@/views/admin/post/List.vue';
+import PostForm from '@/views/admin/child_post/PostForm.vue';
+import List from '@/views/admin/child_post/List.vue';
 </script>

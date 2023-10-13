@@ -218,7 +218,7 @@ import { setData } from '@/firebase/firestore';
 import { states, setEightArea } from '@/utils/states'; // 都道府県,八区分
 
 // utils
-import { specialties } from '@/utils/specialties'; // 専門カテゴリ
+import { specialties, role } from '@/utils/category'; // 専門カテゴリ,権限
 import { fetchAddress } from '@/utils/address'; // 住所取得
 
 // 郵便番号から住所検索
@@ -265,6 +265,7 @@ const submit = handleSubmit(async (values) => {
           address: values.address,
           eightArea: area,
           specialty: values.specialty,
+          role: role.member,
           joinData: new Date(),
         };
 

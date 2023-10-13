@@ -27,7 +27,7 @@
 
     <template v-slot:actions>
       <v-btn
-        color="user"
+        color="member"
         type="submit"
         class="mb-4"
         form="profileForm"

@@ -16,7 +16,7 @@ export default createVuetify({
           primary: '#1867C0',
           secondary: '#5CBBF6',
           administrator: '#010066',
-          user: '#600f18',
+          member: '#600f18',
           white: '#fff',
           gray: '#808080',
           background: "#f5f5f5",
