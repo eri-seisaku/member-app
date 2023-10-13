@@ -1,11 +1,31 @@
-import { storage } from './firebase';
+import { storage } from '@/firebase/firebase';
 import {
-  getDownloadURL,
   ref,
+  getDownloadURL,
+  getMetadata, // メタデータ取得
   uploadBytesResumable
 } from "firebase/storage";
 
-export async function createFirebase(title, memo, fileData) {
+
+export async function upload(fileData) {
+  try {
+    const imageRef = ref(storage, fileData.name); // Storageの参照を作成
+
+    const metadata = await getMetadata(imageRef); // ファイルのメタデータを取得
+
+    const allowedContentTypes = ['image/jpeg', 'image/png', 'image/gif']; // 許可するコンテンツタイプのリスト
+
+    const snapshot = await uploadBytesResumable(imageRef, fileData, metadata);
+    const url = await getDownloadURL(snapshot.ref);
+
+    return url;
+
+  } catch (error) {
+    console.error("Storageへのデータ保存エラーby Storage:", error);
+    throw error; // throw: 呼び出し元に例外処理を投げる
+  }
+}
+export async function createFirebase(title, fileData) {
   try {
     const metadata = {
       contentType: 'image/jpeg',

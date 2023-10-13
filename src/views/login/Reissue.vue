@@ -63,16 +63,13 @@ const email = ref('');
 const errorMessage = ref('');
 const sendMailMode = ref(true);
 
-// router
-import { useRouter } from 'vue-router';
-const router = useRouter();
+// components
+import Card from '@/components/cards/Card.vue';
+import Alert from '@/components/Alert.vue';
 
 // firebase
 import { reissuePassword } from '@/firebase/auth';
 
-// Components
-import Card from '@/components/cards/Card.vue';
-import Alert from '@/components/Alert.vue';
 
 // ログイン処理
 const submit = async () => {

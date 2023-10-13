@@ -73,15 +73,6 @@
         ></v-icon>
         更新
       </v-btn>
-      <v-btn
-        color="user"
-
-        class="mb-4"
-        form="profileForm"
-        @click="logoutUser"
-      >
-        ログアウト
-      </v-btn>
       <v-alert v-if="message">
         {{ message }}
       </v-alert>
@@ -148,7 +139,7 @@ const submitProfileForm = async () => {
     // 成功メッセージなどの処理を追加
   } catch (error) {
     console.log(error.message);
-    if (error.message === "再認証が必要") {
+    if (error.message === "REAUTH_REQUIRED") {
       authDialog.value = true;
     } else {
       console.error('ユーザーデータ更新エラー', error);

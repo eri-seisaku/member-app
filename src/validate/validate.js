@@ -43,6 +43,19 @@ export const validationSchema = object({
   website: string().url('有効なURLを入力してください。').nullable(),
 });
 
+export const passwordValidationSchema = object({
+  currentPassword: string().required(),
+  newPassword: string()
+    .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+        'パスワードには大文字、小文字、数字、特殊文字(@、$、!、%、*、?、&)が含まれている必要があります'
+    )
+    .min(8, 'パスワードは少なくとも8文字以上である必要があります')
+    .max(64, 'パスワードは64文字以下である必要があります')
+    .required(),
+    confirmPassword: string().required(),
+});
+
 export const portfolioValidationSchema = object({
   title: string().required(),
   comment: string(),
@@ -55,4 +68,14 @@ export const portfolioValidationSchema = object({
   }),
   website: string().url('有効なURLを入力してください。').nullable(),
 });
+
+export const profileValidationSchema = object({
+  name: string().required(),
+  officeName: string().required(),
+  email: string().email().required(),
+});
+
+
+
+
 

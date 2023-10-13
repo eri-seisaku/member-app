@@ -1,12 +1,12 @@
 <template>
   <v-container class="fill-height" fluid>
     <v-row>
-      <v-col cols="6" md="2" v-for="card in cards">
-        <HoverCard
+      <v-col cols="6" md="2" v-for="card in cards" :key="card">
+        <HoverIconCard
           :url="card.url"
           :icon="card.icon"
           :title="card.title"
-        ></HoverCard>
+        ></HoverIconCard>
       </v-col>
     </v-row>
     <v-row>
@@ -31,11 +31,11 @@
 <script setup>
 import { ref } from 'vue';
 // Components
-import HoverCard  from '@/components/cards/HoverCard.vue';
+import HoverIconCard  from '@/components/cards/HoverIconCard.vue';
 
 const cards = [
   {
-    url: '/admin',
+    url: '/',
     icon: 'mdi-import',
     title: 'IMPORT'
   },

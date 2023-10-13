@@ -1,9 +1,6 @@
 <template>
   <h2>リスト</h2>
-  <v-container
-    class="fill-height"
-    fluid
-  >
+  <v-container>
     <v-row>
       <v-row>
         <v-col cols="3" v-for="article in articles" :key="article.id">
@@ -15,10 +12,11 @@
               class="bg-grey-lighten-2"
             ></v-img>
             <v-card-title class="text-h6">
-              {{ article.title }}
+              <h4>{{ article.title }}</h4>
             </v-card-title>
-            <v-card-text class="text-h6">
-              {{ article.memo }}
+            <v-card-text class="text-subtitle-2">
+              <a :href="article.website">{{ article.title }}</a>
+              <p>{{ article.comment }}</p>
             </v-card-text>
           </v-card>
         </v-col>

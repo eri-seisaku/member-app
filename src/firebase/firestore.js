@@ -1,4 +1,4 @@
-import { db } from './firebase';
+import { db } from '@/firebase/firebase';
 import {
   collection,
   doc,
@@ -9,8 +9,8 @@ import {
   updateDoc // 更新
 } from "firebase/firestore";
 
-// 登録(上書き)
-export async function saveData(user, fieldName, userData) {
+// 新規登録(上書き)
+export async function setData(user, fieldName, userData) {
   try {
     const userCollection = collection(db, fieldName);
     const userRef = doc(userCollection, user.uid);
@@ -22,14 +22,14 @@ export async function saveData(user, fieldName, userData) {
   }
 }
 
-// 登録(追加)
+// 追加登録
 export async function addData(user, fieldName, userData) {
   try {
     const userCollection = collection(db, fieldName);
     await addDoc(userCollection, userData);
   } catch (error) {
     console.error("Firestoreへのデータ保存エラーby Firestore:", error);
-    throw error; // throw: 呼び出し元に例外処理を投げる
+    throw error;
   }
 }
 

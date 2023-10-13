@@ -6,9 +6,14 @@
       :max-width="size"
     >
       <v-card>
-        <slot name="toolbarTitle"></slot>
-        <v-card-title>
-          <slot name="title"></slot>
+        <v-card-title class="d-flex justify-end">
+          <v-btn
+            icon
+            variant="text"
+            @click="parentDialog = false"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
         </v-card-title>
         <v-card-text>
           <slot name="text"></slot>
@@ -16,7 +21,6 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <slot name="actions"></slot>
-          <v-btn variant="outlined" @click="parentDialog = false">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

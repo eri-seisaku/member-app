@@ -9,7 +9,7 @@
     <form @submit.prevent="submit">
       <div v-if="!confirmMode">
         <v-row
-          v-for="fieldInfo in textFields"
+          v-for="fieldInfo in fields"
           :key="fieldInfo.key"
         >
           <v-col cols="12" md="3" align-self="center" class="mb-3">
@@ -176,6 +176,7 @@
 </template>
 
 <script setup>
+// 初期値
 import { ref } from 'vue';
 const inputValues = ref({});
 const message = ref(''); // 郵便番号検索時のメッセージ
@@ -183,7 +184,7 @@ const errorMessage = ref('');
 const confirmMode = ref(false); // 確認画面の切り替え
 const visible = ref(false); // password表示非表示
 
-// component
+// components
 import Confirm from '@/views/site/signup/Confirm.vue';
 
 // router
@@ -198,7 +199,7 @@ const { handleSubmit } = useForm({
   validationSchema,
 });
 // フィールドとフォームを紐づける
-const textFields = [
+const fields = [
   { key: 'name', field: useField('name'), label: 'お名前', hint: '例) 苗字名前' },
   { key: 'officeName', field: useField('officeName'), label: '事務所名', hint: '' },
   { key: 'phone', field: useField('phone'), label: '電話番号', hint: '例) 09000000000' },
@@ -211,11 +212,14 @@ const zipCode = useField('zipCode');
 const specialty = useField('specialty');
 const checkbox = useField('checkbox');
 
+// firebase
 import { signUp } from '@/firebase/auth';
-import { saveData } from '@/firebase/firestore';
-import { states, setEightArea } from '@/utils/states.js'; // 都道府県,八区分
-import { specialties } from '@/utils/specialties.js'; // 専門カテゴリ
-import { fetchAddress } from '@/utils/address.js'; // 住所取得
+import { setData } from '@/firebase/firestore';
+import { states, setEightArea } from '@/utils/states'; // 都道府県,八区分
+
+// utils
+import { specialties } from '@/utils/specialties'; // 専門カテゴリ
+import { fetchAddress } from '@/utils/address'; // 住所取得
 
 // 郵便番号から住所検索
 const searchAddress = async () => {
@@ -264,7 +268,7 @@ const submit = handleSubmit(async (values) => {
           joinData: new Date(),
         };
 
-        await saveData(user, "members", userData);
+        await setData(user, "members", userData);
 
         // 登録が成功した場合
         router.push('/admin');

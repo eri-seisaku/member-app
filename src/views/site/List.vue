@@ -23,6 +23,7 @@
           <v-icon> mdi-account-edit </v-icon>
           Portfolio
         </a>
+
         <!-- {{ item }} -->
         <!-- {{ item.columns.url }} -->
       </template>
@@ -31,47 +32,12 @@
 </template>
 
 <script setup>
+// 初期値
 import { ref, onMounted } from 'vue';
-import { getAllData } from '@/firebase/firestore';
-
 const members = ref([]);
 const search = ref('');
 const loadingMembers = ref(true);
-
-onMounted(async () => {
-  try {
-    const allDoc = await getAllData("members");
-
-    members.value = allDoc.map(doc => {
-
-      const timestamp = doc.joinData;
-      const date = timestamp.toDate();
-      const year = date.getFullYear();
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const day = date.getDate().toString().padStart(2, '0');
-      const formattedDate = `${year}年${month}月${day}日`;
-
-      return {
-        url: `/members/${doc.memberId}`,
-        officeName: doc.officeName,
-        name: doc.name,
-        eightArea: doc.eightArea,
-        state: doc.state,
-        joinData: formattedDate,
-        specialty: doc.specialty,
-      };
-    });
-
-    loadingMembers.value = false;
-
-  } catch (error) {
-    console.error('ユーザーデータ取得エラー', error);
-    loadingMembers.value = false;
-  }
-});
-
 const itemsPerPage = 5;
-
 const headers = [
   {
     title: '事業所名',
@@ -86,5 +52,61 @@ const headers = [
   { title: '専門デザイン分野', align: 'end', key: 'specialty' },
   { title: 'URL', align: 'end', key: 'url' },
 ];
+
+// firebase
+import { getAllData } from '@/firebase/firestore';
+
+// utils
+import { formatDate } from '@/utils/formatDate'; // 日付形式変換
+onMounted(async () => {
+  try {
+    const allDoc = await getAllData("members");
+
+    // members.value = allDoc.map(doc => {
+
+    //   // const timestamp = doc.joinData;
+    //   // const date = timestamp.toDate();
+    //   // const year = date.getFullYear();
+    //   // const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    //   // const day = date.getDate().toString().padStart(2, '0');
+    //   // const formattedDate = `${year}/${month}/${day}`;
+
+    //   // return {
+    //   //   url: `/members/${doc.memberId}`,
+    //   //   officeName: doc.officeName,
+    //   //   name: doc.name,
+    //   //   eightArea: doc.eightArea,
+    //   //   state: doc.state,
+    //   //   joinData: formattedDate,
+    //   //   specialty: doc.specialty,
+    //   // };
+    // });
+
+    // loadingMembers.value = false;
+
+    // プロミスの配列を作成
+    const promises = allDoc.map(async (doc) => {
+      const formattedDate = await formatDate(doc.joinData);
+      return {
+        url: `/members/${doc.memberId}`,
+        officeName: doc.officeName,
+        name: doc.name,
+        eightArea: doc.eightArea,
+        state: doc.state,
+        joinData: formattedDate,
+        specialty: doc.specialty,
+      };
+    });
+
+    // 全てのプロミスを非同期で実行
+    members.value = await Promise.all(promises);
+    loadingMembers.value = false;
+
+  } catch (error) {
+    console.error('ユーザーデータ取得エラー', error);
+    loadingMembers.value = false;
+  }
+});
+
 
 </script>

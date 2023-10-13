@@ -23,8 +23,9 @@
 
 <script setup>
 import { reactive, computed } from 'vue';
-import { useRouter } from 'vue-router';
 
+// router
+import { useRouter } from 'vue-router';
 const router = useRouter();
 
 const checkboxItems = reactive([

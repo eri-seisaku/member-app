@@ -3,7 +3,7 @@ import {
   createWebHistory,
   START_LOCATION // 遷移を判定するため
 } from 'vue-router'
-import { auth } from '../firebase/firebase';
+import { auth } from '@/firebase/firebase';
 
 
 // 会員サイトルート

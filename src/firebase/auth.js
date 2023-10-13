@@ -1,8 +1,8 @@
-import { auth } from './firebase';
+import { auth } from '@/firebase/firebase';
 import {
-  createUserWithEmailAndPassword, // signup
-  signInWithEmailAndPassword, // login
-  signOut, // logout
+  createUserWithEmailAndPassword, // 新規登録
+  signInWithEmailAndPassword, // ログイン
+  signOut, // ログアウト
   EmailAuthProvider, // 再認証に必要?
   reauthenticateWithCredential, // 再認証
   updateEmail, // email更新
@@ -82,7 +82,7 @@ export async function updateEmailByAuth(newEmail) {
       await sendEmailVerification(user);
 
     } else {
-      throw new Error("ユーザーがログインしていません。by Auth");
+      throw new Error("USER_NOT_LOGGED_IN");
     }
   } catch (error) {
     console.error("メールアドレスの更新エラーby Auth:", error);
@@ -98,14 +98,14 @@ export async function emailCheck(submitEmail) {
     if (user) {
       // メールアドレスを更新
       if (user.email !== submitEmail) {
-        throw new Error("再認証が必要");
+        throw new Error("REAUTH_REQUIRED");
       }
 
       // 更新したメールアドレスに確認メールを送信
       await updateEmailByAuth(submitEmail);
 
     } else {
-      throw new Error("ユーザーがログインしていません。by Auth");
+      throw new Error("USER_NOT_LOGGED_IN");
     }
   } catch (error) {
     console.error("メールアドレスの更新エラーby Auth:", error);
@@ -121,13 +121,13 @@ export async function updatePasswordByAuth(currentPassword, newPassword) {
     if (user) {
       // ユーザーを再認証する
       const credential = EmailAuthProvider.credential(user.email, currentPassword);
-      console.log(credential);
+      // console.log(credential);
       await reauthenticateWithCredential(user, credential);
 
       // パスワード更新
       await updatePassword(user, newPassword);
     } else {
-      throw new Error("ユーザーがログインしていません。");
+      throw new Error("USER_NOT_LOGGED_IN");
     }
   } catch (error) {
     console.error("パスワードの更新エラーby Auth:", error);
