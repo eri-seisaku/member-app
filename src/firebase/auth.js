@@ -136,7 +136,7 @@ export async function updatePasswordByAuth(currentPassword, newPassword) {
 }
 
 // パスワード再設定
-export async function resetPassword(email) {
+export async function resetPassword() {
   try {
     const user = auth.currentUser;
 

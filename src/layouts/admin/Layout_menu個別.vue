@@ -101,25 +101,29 @@ const title = computed(() => {
 
 // firebase
 import { auth } from '@/firebase/firebase';
-const user = auth.currentUser;
 import { logout } from '@/firebase/auth';
 import { getData } from '@/firebase/firestore';
 
-// menu
-import { getMenu } from '@/router/menu';
+const user = auth.currentUser;
 
-// メニュー取得
+// 権限取得
 onMounted(async () => {
   try {
     const userDoc = await getData(user.uid, "members");
-    const menu = getMenu(user, userDoc.role);
 
-    if (userDoc.role === '管理者') {
+    // console.log(userDoc.role); // 権限
+
+    const userRole = userDoc.role;
+
+    if (userRole === '管理者') {
       color.value = 'administrator';
+      navMenus.value = administratorMenu;
+
     } else {
       color.value = 'member';
+      navMenus.value = memberMenu;
+
     }
-    navMenus.value = menu;
   } catch (error) {
     console.error('ユーザーデータ取得エラー', error);
   }
@@ -130,5 +134,48 @@ const logoutUser = () => {
   logout();
   router.push('/');
 }
+
+// 管理者ナビメニュー
+const administratorMenu = [
+  {
+    icon: 'mdi-view-dashboard',
+    title: 'DASHBOARD',
+    to: '/admin/administrator/'
+  },
+  {
+    icon: 'mdi-import',
+    title: 'IMPORT',
+    to: '/admin/administrator/import'
+  },
+  {
+    icon: 'mdi-file-account',
+    title: 'USER LIST',
+    to: '/admin/administrator/list'
+  },
+  {
+    icon: 'mdi-check-decagram-outline',
+    title: 'APPROVAL',
+    to: '/admin/administrator/approval'
+  },
+];
+
+// 組合員ナビメニュー
+const memberMenu = [
+  {
+    icon: 'mdi-view-dashboard',
+    title: 'DASHBOARD',
+    to: "/admin"
+  },
+  {
+    icon: 'mdi-account-cog',
+    title: 'PROFILE',
+    to: `/admin/profile/${user.uid}`
+  },
+  {
+    icon: 'mdi-file-account',
+    title: 'POST PORTFOLIO',
+    to: '/admin/post'
+  },
+];
 </script>
 

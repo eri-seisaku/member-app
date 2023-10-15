@@ -185,7 +185,7 @@ const confirmMode = ref(false); // 確認画面の切り替え
 const visible = ref(false); // password表示非表示
 
 // components
-import Confirm from '@/views/site/signup/Confirm.vue';
+import Confirm from '@/views/site/child_signup/Confirm.vue';
 
 // router
 const router = useRouter();

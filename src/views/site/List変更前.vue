@@ -1,61 +1,44 @@
 <template>
   <h2 class="text-h5">加入リスト</h2>
 
-  <v-row class="mt-8">
-    <v-col cols="12" md="6">
-      <EightArea @selected="handleAreaSelected" />
-    </v-col>
-    <v-col cols="12" md="6">
-      <v-sheet :height="384" border color="grey-lighten-3" rounded class="pa-4">
-        <h4 class="
-        text-subtitle-1 mb-2">検索</h4>
-        <p>検索したいキーワードを入力するか、都道府県地図のエリアをクリックまたはタップしてください。</p>
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="キーワード"
-          variant="outlined"
-          single-line
-          hide-details
-          class="my-4"
-        ></v-text-field>
-        <!-- hide-detailsは余白 -->
-        <p>親コンポーネントで選択されたエリア名: {{ search }}</p>
-      </v-sheet>
-    </v-col>
-  </v-row>
-  <v-row>
-    <v-col cols="12" md="12">
-      <v-data-table
-        v-model:items-per-page="itemsPerPage"
-        :headers="headers"
-        :items="members"
-        :loading="loadingMembers"
-        :search="search"
-      >
-        <template v-slot:item.url="{ item }">
-          <a :href="item.columns.url" class="text-anchor">
-            <v-icon> mdi-account-edit </v-icon>
-            Portfolio
-          </a>
+  <div class="mt-8">
+    <EightArea />
+    <v-text-field
+      v-model="search"
+      append-icon="mdi-magnify"
+      label="キーワード"
+      variant="outlined"
+      single-line
+      hide-details
+    ></v-text-field>
+    <!-- hide-detailsは余白 -->
+    <v-data-table
+      v-model:items-per-page="itemsPerPage"
+      :headers="headers"
+      :items="members"
+      :loading="loadingMembers"
+      :search="search"
+    >
+      <template v-slot:item.url="{ item }">
+        <a :href="item.columns.url" class="text-anchor">
+          <v-icon> mdi-account-edit </v-icon>
+          Portfolio
+        </a>
 
-          <!-- {{ item }} -->
-          <!-- {{ item.columns.url }} -->
-        </template>
-      </v-data-table>
-    </v-col>
-  </v-row>
+        <!-- {{ item }} -->
+        <!-- {{ item.columns.url }} -->
+      </template>
+    </v-data-table>
+  </div>
 </template>
 
 <script setup>
 // 初期値
 import { ref, onMounted } from 'vue';
-
 const members = ref([]);
 const search = ref('');
-// const search = ref(['北海道', '東北', '関東', '中部', '近畿', '中国', '四国', '九州沖縄']);
 const loadingMembers = ref(true);
-const itemsPerPage = 20;
+const itemsPerPage = 5;
 const headers = [
   {
     title: '事業所名',
@@ -129,8 +112,5 @@ onMounted(async () => {
   }
 });
 
-const handleAreaSelected = (areaName) => {
-  search.value = areaName;
-  // search.value = [areaName];
-}
+
 </script>

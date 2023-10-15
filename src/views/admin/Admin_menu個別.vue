@@ -1,11 +1,11 @@
 <template>
   <v-container class="fill-height" fluid>
     <v-row>
-      <v-col cols="6" md="2" v-for="menu in navMenus">
+      <v-col cols="6" md="2" v-for="card in cards" :key="card">
         <HoverIconCard
-          :to="menu.to"
-          :icon="menu.icon"
-          :title="menu.title"
+          :to="card.to"
+          :icon="card.icon"
+          :title="card.title"
         ></HoverIconCard>
       </v-col>
     </v-row>
@@ -29,31 +29,42 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-const navMenus = ref([]);
-
+import { ref } from 'vue';
 // components
 import HoverIconCard  from '@/components/cards/HoverIconCard.vue';
 
-// firebase
-import { auth } from '@/firebase/firebase';
-const user = auth.currentUser;
-import { getData } from '@/firebase/firestore';
-
-// menu
-import { getMenu } from '@/router/menu';
-
-// メニュー取得
-onMounted(async () => {
-  try {
-    const userDoc = await getData(user.uid, "members");
-    const menu = getMenu(user, userDoc.role);
-    navMenus.value = menu;
-  } catch (error) {
-    console.error('ユーザーデータ取得エラー', error);
-  }
-});
-
+const cards = [
+  {
+    to: '/',
+    icon: 'mdi-import',
+    title: 'IMPORT'
+  },
+  {
+    to: '/admin',
+    icon: 'mdi-account-cog',
+    title: 'USER'
+  },
+  {
+    to: '/admin',
+    icon: 'mdi-file-document-check-outline',
+    title: 'APPROVAL'
+  },
+  {
+    to: '',
+    icon: 'mdi-plus-box-outline',
+    title: 'EMPTY'
+  },
+  {
+    to: '',
+    icon: 'mdi-plus-box-outline',
+    title: 'EMPTY'
+  },
+  {
+    to: '',
+    icon: 'mdi-plus-box-outline',
+    title: 'EMPTY'
+  },
+];
 
 const headers = ref([
   {

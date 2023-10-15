@@ -1,11 +1,32 @@
 <template>
   <v-container>
   <v-row>
-    <v-col cols="12" md="4" v-for="card in cards" :key="card">
-      <HoverImgCard
+    <v-col cols="12" md="4" v-for="(card, index) in cards" :key="index">
+      <!-- <HoverImgCard
         :url="card.url"
         :src="card.src"
-      />
+      /> -->
+
+      <v-img
+        class="mx-auto event-img"
+        aspect-ratio="16/9"
+        cover
+        @click="openDialog(index)"
+        :src="card.src"
+      ></v-img>
+
+      <Dialog v-model:dialog="card.dialog" :size="448">
+        <template v-slot:text>
+          <v-img
+            class="mx-auto"
+            aspect-ratio="16/9"
+            cover
+            :src="card.src"
+          ></v-img>
+          <h3 class="text-h5 my-5">{{ card.title }}</h3>
+          <p>{{ card.content }}</p>
+        </template>
+      </Dialog>
     </v-col>
   </v-row>
 </v-container>
@@ -13,23 +34,60 @@
 
 <script setup>
 import { ref } from 'vue';
-// Components
-import HoverImgCard  from '@/components/cards/HoverImgCard.vue';
 
+// components
+import Dialog  from '@/components/Dialog.vue';
 
-const cards = [
+const cards = ref([
   {
-    url: '/',
-    src: '/src/assets/portfolio/website01.png'
+    title: 'website01',
+    src: '/src/assets/portfolio/website01.png',
+    dialog: false,
+    content: 'This is the content for website01.',
   },
   {
-    url: '/',
-    src: '/src/assets/portfolio/website01.png'
+    title: 'website02',
+    src: '/src/assets/portfolio/website02.png',
+    dialog: false,
+    content: 'This is the content for website02.',
   },
   {
-    url: '/',
-    src: '/src/assets/portfolio/website01.png'
+    title: 'website03',
+    src: '/src/assets/portfolio/website03.png',
+    dialog: false,
+    content: 'This is the content for website03.',
   },
-];
+  {
+    title: 'website04',
+    src: '/src/assets/portfolio/website04.png',
+    dialog: false,
+    content: 'This is the content for website04.',
+  },
+  {
+    title: 'website05',
+    src: '/src/assets/portfolio/website05.png',
+    dialog: false,
+    content: 'This is the content for website05.',
+  },
+  {
+    title: 'website06',
+    src: '/src/assets/portfolio/website06.png',
+    dialog: false,
+    content: 'This is the content for website06.',
+  },
+]);
+
+const openDialog = (index) => {
+  cards.value[index].dialog = true;
+};
 
 </script>
+
+<style>
+.event-img {
+  cursor: pointer;
+}
+.event-img:hover {
+  opacity: 0.5;
+}
+</style>
