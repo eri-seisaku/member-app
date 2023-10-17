@@ -1,38 +1,28 @@
 <template>
-  <h2 class="text-h5">加入リスト</h2>
+  <h2 class="text-h5">LIST</h2>
 
-  <v-row class="mt-8">
-    <v-col cols="12" md="6">
-      <EightArea @selected="handleAreaSelected" />
-    </v-col>
-    <v-col cols="12" md="6">
-      <v-sheet :height="384" border color="grey-lighten-3" rounded class="pa-4">
-        <h4 class="
-        text-subtitle-1 mb-2">検索</h4>
-        <p>検索したいキーワードを入力するか、都道府県地図のエリアをクリックまたはタップしてください。</p>
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="キーワード"
-          variant="outlined"
-          single-line
-          hide-details
-          class="my-4"
-        ></v-text-field>
-        <!-- hide-detailsは余白 -->
-        <p>親コンポーネントで選択されたエリア名: {{ search }}</p>
-      </v-sheet>
-    </v-col>
-  </v-row>
   <v-row>
     <v-col cols="12" md="12">
       <v-data-table
         v-model:items-per-page="itemsPerPage"
         :headers="headers"
-        :items="members"
+        :items="filteredMembers"
         :loading="loadingMembers"
         :search="search"
       >
+        <template v-slot:top>
+          <v-row class="my-8">
+            <v-col cols="12" md="6">
+              <EightArea @selected="handleAreaSelected" />
+            </v-col>
+            <v-col cols="12" md="6">
+              <SearchForm
+                @searched="handleFormSubmitted"
+                @reset="handleTableReset"
+              />
+            </v-col>
+          </v-row>
+        </template>
         <template v-slot:item.url="{ item }">
           <a :href="item.columns.url" class="text-anchor">
             <v-icon> mdi-account-edit </v-icon>
@@ -50,10 +40,17 @@
 <script setup>
 // 初期値
 import { ref, onMounted } from 'vue';
+const initialMembers = ref([]); // 初期データを保持するプロパティ
+const filteredMembers = ref([]); // フィルタリングされたデータを保持するプロパティ
 
-const members = ref([]);
-const search = ref('');
-// const search = ref(['北海道', '東北', '関東', '中部', '近畿', '中国', '四国', '九州沖縄']);
+const search = ref(''); // 八区分エリア用
+
+const searchData = ref({
+    keyword: '',
+    state: '',
+    specialty: '',
+});
+
 const loadingMembers = ref(true);
 const itemsPerPage = 20;
 const headers = [
@@ -73,12 +70,14 @@ const headers = [
 
 // components
 import EightArea from '@/views/site/child_list/EightArea.vue';
+import SearchForm from '@/views/site/child_list/SearchForm.vue';
 
 // firebase
 import { getAllData } from '@/firebase/firestore';
 
 // utils
 import { formatDate } from '@/utils/formatDate'; // 日付形式変換
+
 onMounted(async () => {
   try {
     const allDoc = await getAllData("members");
@@ -120,7 +119,11 @@ onMounted(async () => {
     });
 
     // 全てのプロミスを非同期で実行
-    members.value = await Promise.all(promises);
+    initialMembers.value = await Promise.all(promises);
+
+    // 初期データを filteredMembers にスプレッド構文でコピーを作成
+    filteredMembers.value = [...initialMembers.value];
+
     loadingMembers.value = false;
 
   } catch (error) {
@@ -129,8 +132,34 @@ onMounted(async () => {
   }
 });
 
+// 地図をクリックしたら
 const handleAreaSelected = (areaName) => {
   search.value = areaName;
-  // search.value = [areaName];
 }
+
+// リセットをクリックしたら
+const handleTableReset = () => {
+  // リセットボタンが押されたとき、フィルタリングされたデータを初期データにリセット
+  filteredMembers.value = [...initialMembers.value];
+  search.value = '';
+}
+
+// 検索フォームを送信したら
+const handleFormSubmitted = (formData) => {
+  searchData.value = formData;
+  // console.log(searchData.value.keyword); // keywordが表示
+  filterMembers();
+}
+
+const filterMembers = () => {
+  // 検索ボタンが押されたとき、フィルタリングを実行
+  filteredMembers.value = initialMembers.value.filter(member => {
+    return (
+      (searchData.value.keyword === '' || member.name.toLowerCase().includes(searchData.value.keyword.toLowerCase())) &&
+      (searchData.value.state === '' || member.state === searchData.value.state) &&
+      (searchData.value.specialty === '' || member.specialty === searchData.value.specialty)
+    );
+  });
+}
+
 </script>

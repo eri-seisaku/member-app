@@ -215,9 +215,9 @@ const checkbox = useField('checkbox');
 // firebase
 import { signUp } from '@/firebase/auth';
 import { setData } from '@/firebase/firestore';
-import { states, setEightArea } from '@/utils/states'; // 都道府県,八区分
 
 // utils
+import { states, setEightArea } from '@/utils/states'; // 都道府県,八区分
 import { specialties, role } from '@/utils/category'; // 専門カテゴリ,権限
 import { fetchAddress } from '@/utils/address'; // 住所取得
 

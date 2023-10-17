@@ -47,6 +47,12 @@ const siteRoutes = [
         component: () => import('@/views/site/Detail.vue'),
         meta: { title: 'DETAIL'}
       },
+      {
+        path: '/sample',
+        name: 'Sample',
+        component: () => import('@/views/site/Sample.vue'),
+        meta: { title: 'SAMPLE'}
+      },
     ],
   },
 ];

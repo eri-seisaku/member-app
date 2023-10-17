@@ -1,44 +1,69 @@
 <template>
-  <h2 class="text-h5">加入リスト</h2>
+  <h2 class="text-h5">LIST</h2>
 
-  <div class="mt-8">
-    <EightArea />
-    <v-text-field
-      v-model="search"
-      append-icon="mdi-magnify"
-      label="キーワード"
-      variant="outlined"
-      single-line
-      hide-details
-    ></v-text-field>
-    <!-- hide-detailsは余白 -->
-    <v-data-table
-      v-model:items-per-page="itemsPerPage"
-      :headers="headers"
-      :items="members"
-      :loading="loadingMembers"
-      :search="search"
-    >
-      <template v-slot:item.url="{ item }">
-        <a :href="item.columns.url" class="text-anchor">
-          <v-icon> mdi-account-edit </v-icon>
-          Portfolio
-        </a>
+  <v-row class="mt-8">
+    <v-col cols="12" md="6">
+      <EightArea @selected="handleAreaSelected" />
+    </v-col>
+    <v-col cols="12" md="6">
+      <SearchForm
+        @searched="handleFormSubmitted"
+      />
+      <v-sheet :height="384" border color="grey-lighten-3" rounded class="pa-4">
+        <h4 class="text-subtitle-1 mb-2">検索</h4>
+        <p>検索したいキーワードを入力するか、都道府県地図のエリアをクリックまたはタップしてください。</p>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="キーワード"
+          variant="outlined"
+          single-line
+          hide-details
+          class="my-4"
+        ></v-text-field>
+        <!-- hide-detailsは余白 -->
+        <p>親コンポーネントで選択されたエリア名: {{ search }}</p>
+      </v-sheet>
+    </v-col>
+  </v-row>
+  <v-row>
+    <v-col cols="12" md="12">
+      <v-data-table
+        v-model:items-per-page="itemsPerPage"
+        :headers="headers"
+        :items="members"
+        :loading="loadingMembers"
+        :search="search"
+      >
+        <template v-slot:item.url="{ item }">
+          <a :href="item.columns.url" class="text-anchor">
+            <v-icon> mdi-account-edit </v-icon>
+            Portfolio
+          </a>
 
-        <!-- {{ item }} -->
-        <!-- {{ item.columns.url }} -->
-      </template>
-    </v-data-table>
-  </div>
+          <!-- {{ item }} -->
+          <!-- {{ item.columns.url }} -->
+        </template>
+      </v-data-table>
+    </v-col>
+  </v-row>
 </template>
 
 <script setup>
 // 初期値
 import { ref, onMounted } from 'vue';
+
 const members = ref([]);
 const search = ref('');
+
+const searchData = ref({
+    keyword: '',
+    state: '',
+    specialty: '',
+});
+
 const loadingMembers = ref(true);
-const itemsPerPage = 5;
+const itemsPerPage = 20;
 const headers = [
   {
     title: '事業所名',
@@ -56,12 +81,14 @@ const headers = [
 
 // components
 import EightArea from '@/views/site/child_list/EightArea.vue';
+import SearchForm from '@/views/site/child_list/SearchForm.vue';
 
 // firebase
 import { getAllData } from '@/firebase/firestore';
 
 // utils
 import { formatDate } from '@/utils/formatDate'; // 日付形式変換
+
 onMounted(async () => {
   try {
     const allDoc = await getAllData("members");
@@ -111,6 +138,18 @@ onMounted(async () => {
     loadingMembers.value = false;
   }
 });
+
+// 地図をクリックしたら
+const handleAreaSelected = (areaName) => {
+  search.value = areaName;
+  // search.value = [areaName];
+}
+
+// 検索フォームを送信したら
+const handleFormSubmitted = (formData) => {
+  searchData.value = formData;
+  console.log(searchData.value.keyword);
+}
 
 
 </script>

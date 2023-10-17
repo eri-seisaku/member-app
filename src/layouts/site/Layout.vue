@@ -61,7 +61,7 @@
           </v-col>
           <v-col cols="12" md="2">
             <v-sheet rounded="lg">
-              <!-- <v-list rounded="lg">
+              <v-list rounded="lg">
                 <v-list-item
                   v-for="n in 5"
                   :key="n"
@@ -76,7 +76,7 @@
                   link
                   title="Refresh"
                 ></v-list-item>
-              </v-list> -->
+              </v-list>
             </v-sheet>
           </v-col>
         </v-row>
