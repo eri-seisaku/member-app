@@ -1,8 +1,11 @@
 <template>
   <Avatar
-    :userName="userData.name"
     imageSrc="https://cdn.vuetifyjs.com/images/john.jpg"
   />
+  <!-- <Avatar
+    :userName="userData.name"
+    imageSrc="https://cdn.vuetifyjs.com/images/john.jpg"
+  /> -->
 </template>
 
 <script setup>

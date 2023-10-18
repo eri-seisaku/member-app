@@ -78,7 +78,9 @@ const emit = defineEmits([
 ]);
 
 const reset = () => {
-  formData.value = '';
+  formData.value.keyword = '';
+  formData.value.state = '';
+  formData.value.specialty = '';
   emit('reset'); // 追加
 }
 

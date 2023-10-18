@@ -50,6 +50,9 @@
     <v-main class="bg-grey-lighten-3">
       <v-container>
         <v-row>
+          <!-- <v-col cols="12" md="12">
+            header
+          </v-col> -->
           <v-col cols="12" md="10">
             <v-sheet
               min-height="70vh"
@@ -116,6 +119,9 @@ const navMenus = [
     to: '/list'
   },
 ];
+
+// components
+import HoverImgCard from '@/components/cards/HoverImgCard.vue';
 
 </script>
 

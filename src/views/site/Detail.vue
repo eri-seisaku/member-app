@@ -1,93 +1,81 @@
 <template>
   <v-container>
-  <v-row>
-    <v-col cols="12" md="4" v-for="(card, index) in cards" :key="index">
-      <!-- <HoverImgCard
-        :url="card.url"
-        :src="card.src"
-      /> -->
-
-      <v-img
-        class="mx-auto event-img"
-        aspect-ratio="16/9"
-        cover
-        @click="openDialog(index)"
-        :src="card.src"
-      ></v-img>
-
-      <Dialog v-model:dialog="card.dialog" :size="448">
-        <template v-slot:text>
+    <v-row align="center">
+      <v-col cols="12" md="5" class="d-flex align-center flex-md-row flex-column">
+        <v-avatar
+          color="grey"
+          size="130"
+          class="ma-4"
+        >
           <v-img
-            class="mx-auto"
-            aspect-ratio="16/9"
             cover
-            :src="card.src"
+            src="https://cdn.vuetifyjs.com/images/john.jpg"
           ></v-img>
-          <h3 class="text-h5 my-5">{{ card.title }}</h3>
-          <p>{{ card.content }}</p>
-        </template>
-      </Dialog>
-    </v-col>
-  </v-row>
-</v-container>
+        </v-avatar>
+        <div class="text-center text-md-left">
+          <a class="d-block text-grey-lighten-1 custom-hover" href="https://webdeveloper.com">ABC OFFICE</a>
+          <h3 class="text-h4 my-2">青森次郎</h3>
+          <LinkIcon
+            v-for="link in links"
+            :link="link.link"
+            :icon="link.icon"
+          />
+        </div>
+
+      </v-col>
+
+      <v-col cols="12" md="7">
+        <v-list lines="one">
+          <v-list-item
+            v-for="list in lists"
+            :key="list.title"
+            :title="list.title"
+            :subtitle="list.value"
+          ></v-list-item>
+        </v-list>
+      </v-col>
+    </v-row>
+    <v-row>
+      <Accordion />
+    </v-row>
+  </v-container>
 </template>
 
 <script setup>
-import { ref } from 'vue';
 
 // components
-import Dialog  from '@/components/Dialog.vue';
+import Accordion from '@/views/site/child_detail/Accordion.vue';
+import LinkIcon from '@/components/text/LinkIcon.vue';
 
-const cards = ref([
+const links = [
   {
-    title: 'website01',
-    src: '/src/assets/portfolio/website01.png',
-    dialog: false,
-    content: 'This is the content for website01.',
+    link: 'https://twitter.com/home',
+    icon: 'mdi-twitter',
   },
   {
-    title: 'website02',
-    src: '/src/assets/portfolio/website02.png',
-    dialog: false,
-    content: 'This is the content for website02.',
+    link: 'https://ja-jp.facebook.com/',
+    icon: 'mdi-facebook',
   },
   {
-    title: 'website03',
-    src: '/src/assets/portfolio/website03.png',
-    dialog: false,
-    content: 'This is the content for website03.',
+    link: 'https://www.instagram.com/',
+    icon: 'mdi-instagram',
   },
-  {
-    title: 'website04',
-    src: '/src/assets/portfolio/website04.png',
-    dialog: false,
-    content: 'This is the content for website04.',
-  },
-  {
-    title: 'website05',
-    src: '/src/assets/portfolio/website05.png',
-    dialog: false,
-    content: 'This is the content for website05.',
-  },
-  {
-    title: 'website06',
-    src: '/src/assets/portfolio/website06.png',
-    dialog: false,
-    content: 'This is the content for website06.',
-  },
-]);
+];
 
-const openDialog = (index) => {
-  cards.value[index].dialog = true;
-};
+const lists = [
+  {
+    title: 'SPECIALTY',
+    value: 'グラフィックデザイン'
+  },
+  {
+    title: 'INDUSTRY',
+    value: 'HP制作,WEBデザイン'
+  },
+  {
+    title: 'JOB',
+    value: 'WEBデザイナー,WEBコーディネーター,WEBプロデューサー'
+  },
+];
 
 </script>
 
-<style>
-.event-img {
-  cursor: pointer;
-}
-.event-img:hover {
-  opacity: 0.5;
-}
-</style>

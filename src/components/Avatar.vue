@@ -6,7 +6,7 @@
     >
       <v-img cover :src="imageSrc"></v-img>
     </v-avatar>
-    <h4 class="mt-2 text-subtitle-1">{{ userName }}</h4>
+    <!-- <h4 class="mt-2 text-subtitle-1">{{ userName }}</h4> -->
   </v-sheet>
 </template>
 
@@ -14,7 +14,7 @@
 <script setup>
 // 親から子へ
 const props = defineProps({
-  userName: String,
+  // userName: String,
   imageSrc: String
 });
 
