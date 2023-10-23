@@ -6,6 +6,7 @@
 
 </script>
 <style>
+/* scrollbarをお洒落に */
 ::-webkit-scrollbar{
   width: 10px;
 }
