@@ -1,12 +1,18 @@
 <template>
-  <div class="text-center">
+  <div>
     <v-dialog
       v-model="parentDialog"
       activator="parent"
       :max-width="size"
     >
       <v-card>
-        <v-card-title class="d-flex justify-end">
+        <v-card-title class="d-flex justify-space-between">
+        <!-- <v-card-title class="d-flex justify-end"> -->
+          <v-img
+            class="mt-4"
+            max-width="120"
+            src="@/assets/logo-vuetify.svg"
+          ></v-img>
           <v-btn
             icon
             variant="text"
@@ -15,13 +21,13 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
-        <v-card-text>
-          <slot name="text"></slot>
+        <v-card-text class="mb-4">
+          <slot name="content"></slot>
         </v-card-text>
-        <v-card-actions>
+        <!-- <v-card-actions>
           <v-spacer></v-spacer>
           <slot name="actions"></slot>
-        </v-card-actions>
+        </v-card-actions> -->
       </v-card>
     </v-dialog>
   </div>

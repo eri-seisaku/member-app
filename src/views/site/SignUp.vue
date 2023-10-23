@@ -44,9 +44,19 @@
               :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
               :type="visible ? 'text' : 'password'"
               @click:append-inner="visible = !visible"
-              prepend-inner-icon="mdi-lock-outline"
+
               variant="outlined"
             ></v-text-field>
+            <v-chip
+              v-for="chip in chips"
+              :key="chip.key"
+              class="ma-2"
+              size="small"
+              :color="chip.value.value ? 'success' : 'gray'"
+              :prepend-icon="chip.value.value ? 'mdi-checkbox-marked-circle' : 'mdi-check-circle-outline'"
+            >
+              {{ chip.text }}
+            </v-chip>
           </v-col>
         </v-row>
         <v-row>
@@ -177,7 +187,7 @@
 
 <script setup>
 // 初期値
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 const inputValues = ref({});
 const message = ref(''); // 郵便番号検索時のメッセージ
 const errorMessage = ref('');
@@ -196,7 +206,7 @@ import { useField, useForm } from 'vee-validate';
 import { validationSchema } from '@/validate/validate';
 
 const { handleSubmit } = useForm({
-  validationSchema,
+  validationSchema: validationSchema,
 });
 // フィールドとフォームを紐づける
 const fields = [
@@ -211,6 +221,13 @@ const address = useField('address');
 const zipCode = useField('zipCode');
 const specialty = useField('specialty');
 const checkbox = useField('checkbox');
+
+const chips = [
+  { key: 'uppercase', text: '大文字', value: ref(false)},
+  { key: 'lowercase', text: '小文字', value: ref(false)},
+  { key: 'specialSymbols', text: '特殊記号', value: ref(false)},
+  { key: 'count', text: '8文字以上', value: ref(false)},
+];
 
 // firebase
 import { signUp } from '@/firebase/auth';
@@ -287,4 +304,20 @@ const back = () => {
   errorMessage.value = "";
 };
 
+// chipの色を変更
+const updateChips = (newVal) => {
+  const uppercaseArr = chips.find(chip => chip.key === 'uppercase');
+  const lowercaseArr = chips.find(chip => chip.key === 'lowercase');
+  const specialSymbolsArr = chips.find(chip => chip.key === 'specialSymbols');
+  const countArr = chips.find(chip => chip.key === 'count');
+  uppercaseArr.value.value = /[A-Z]/.test(newVal);
+  lowercaseArr.value.value = /[a-z]/.test(newVal);
+  specialSymbolsArr.value.value = /[@$!%*?&]/.test(newVal);
+  countArr.value.value = /^.{8,64}$/.test(newVal);
+};
+
+// watchで入力の状態を監視
+watch(() => password.value.value, (newVal) => {
+  updateChips(newVal);
+});
 </script>

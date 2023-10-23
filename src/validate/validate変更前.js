@@ -12,19 +12,15 @@ setLocale({
   },
 });
 
-const commonSchema = {
+export const Schema = object({
   name: string().required(),
   officeName: string().required(),
   email: string().email().required(),
-};
-
-export const profileSchema = commonSchema;
+});
 
 export const validationSchema = object({
-  // name: string().required(),
-  // officeName: string().required(),
-  // email: string().email().required(),
-  ...commonSchema,
+  name: string().required(),
+  officeName: string().required(),
   zipCode: string().length(7, '郵便番号はハイフンなしの7桁で入力する必要があります').required(),
   state: string().required(),
   address: string().required(),
@@ -32,6 +28,7 @@ export const validationSchema = object({
     .matches(/[0-9-]+/, '電話番号は9桁以上である必要があります。')
     .min(9, '電話番号は9桁以上である必要があります。')
     .required(),
+  email: string().email().required(),
   password: string()
     .matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
@@ -77,5 +74,10 @@ export const portfolioValidationSchema = object({
   }),
   website: string().url('有効なURLを入力してください。').nullable(),
 });
+
+
+
+
+
 
 

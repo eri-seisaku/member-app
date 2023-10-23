@@ -77,6 +77,7 @@ const submit = async () => {
     await reissuePassword(email.value);
     // フォームを非表示
     sendMailMode.value = false;
+    errorMessage.value = '';
 
   } catch (error) {
     errorMessage.value = error.message;

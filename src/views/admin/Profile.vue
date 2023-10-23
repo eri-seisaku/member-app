@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-// component
+// components
 import EditAvatar from '@/views/admin/child_profile/EditAvatar.vue';
 // import EditProfileForm from '@/views/admin/child_profile/EditProfileForm.vue';
 import ProfileForm from '@/views/admin/child_profile/ProfileForm.vue'; // 未解決

@@ -13,8 +13,12 @@
           ></v-img>
         </v-avatar>
         <div class="text-center text-md-left">
-          <a class="d-block text-grey-lighten-1 custom-hover" href="https://webdeveloper.com">ABC OFFICE</a>
-          <h3 class="text-h4 my-2">青森次郎</h3>
+          <!-- <p>ユーザーID: {{ $route.params.userId }}</p> -->
+          <a
+            class="d-block text-grey-lighten-1 mx-2 custom-hover"
+            href="https://webdeveloper.com"
+          >{{ readData.officeName }}</a>
+          <h3 class="text-h4 my-2">{{ readData.name }}</h3>
           <LinkIcon
             v-for="link in links"
             :link="link.link"
@@ -42,10 +46,52 @@
 </template>
 
 <script setup>
+// 初期値
+import { ref, onMounted } from 'vue';
+const lists = ref([]);
+const readData = ref({});
+
+// router
+import { useRoute } from "vue-router";
+const route = useRoute();
+
+console.log(route.params.userId); // userId取得
 
 // components
 import Accordion from '@/views/site/child_detail/Accordion.vue';
 import LinkIcon from '@/components/text/LinkIcon.vue';
+
+// firebase
+import { getData } from '@/firebase/firestore';
+
+onMounted(async () => {
+  try {
+    const userDoc = await getData(route.params.userId, "members");
+
+    readData.value = userDoc;
+
+    console.log(readData.value);
+
+    lists.value = [
+      {
+        title: 'SPECIALTY',
+        value: readData.value.specialty
+      },
+      {
+        title: 'INDUSTRY',
+        value: 'HP制作,WEBデザイン'
+      },
+      {
+        title: 'JOB',
+        value: 'WEBデザイナー,WEBコーディネーター,WEBプロデューサー'
+      },
+    ];
+
+  } catch (error) {
+    console.error('ユーザーデータ取得エラー', error);
+  }
+});
+
 
 const links = [
   {
@@ -62,20 +108,6 @@ const links = [
   },
 ];
 
-const lists = [
-  {
-    title: 'SPECIALTY',
-    value: 'グラフィックデザイン'
-  },
-  {
-    title: 'INDUSTRY',
-    value: 'HP制作,WEBデザイン'
-  },
-  {
-    title: 'JOB',
-    value: 'WEBデザイナー,WEBコーディネーター,WEBプロデューサー'
-  },
-];
 
 </script>
 

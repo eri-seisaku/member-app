@@ -9,7 +9,7 @@
     ></v-img>
 
     <Dialog v-model:dialog="card.dialog" :size="448">
-      <template v-slot:text>
+      <template v-slot:content>
         <v-img
           class="mx-auto"
           aspect-ratio="16/9"

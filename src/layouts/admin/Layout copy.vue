@@ -89,7 +89,6 @@ import { ref, computed, onMounted } from "vue";
 const drawer = ref(null);
 const color = ref('');
 const navMenus = ref([]);
-const user = ref('');
 
 // router
 import { useRoute, useRouter } from "vue-router";
@@ -101,7 +100,9 @@ const title = computed(() => {
 });
 
 // firebase
-import { getCurrentUser, logout } from '@/firebase/auth';
+import { auth } from '@/firebase/firebase';
+const user = auth.currentUser;
+import { logout } from '@/firebase/auth';
 import { getData } from '@/firebase/firestore';
 
 // menu
@@ -110,9 +111,8 @@ import { getMenu } from '@/router/menu';
 // メニュー取得
 onMounted(async () => {
   try {
-    user.value = await getCurrentUser();
-    const userDoc = await getData(user.value.uid, "members");
-    const menu = getMenu(user.value, userDoc.role);
+    const userDoc = await getData(user.uid, "members");
+    const menu = getMenu(user, userDoc.role);
 
     if (userDoc.role === '管理者') {
       color.value = 'administrator';

@@ -84,7 +84,7 @@ const errorMessage = ref('');
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
-// Components
+// components
 import Card from '@/components/cards/Card.vue';
 import Alert from '@/components/Alert.vue';
 
@@ -98,7 +98,7 @@ import { login } from '@/firebase/auth';
 // ログイン処理
 const submit = async () => {
   try {
-    const user = await login(email.value, password.value);
+    await login(email.value, password.value);
 
     // ストアのログイン状態とプロフィール情報を更新
     // authStore.login({ id: user.uid, email: user.email });

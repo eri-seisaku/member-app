@@ -12,86 +12,86 @@ import {
   fetchSignInMethodsForEmail // 重複確認
 } from "firebase/auth";
 
-// ログイン中のユーザー情報を取得
-export async function getCurrentUser() {
-  const user = auth.currentUser;
-  return user;
+// 重複チェック
+async function checkEmailDuplicate(email) {
+  const providers = await fetchSignInMethodsForEmail(auth, email);
+  return providers;
 }
 
-// メールアドレス重複チェック
-async function checkEmailDuplicate(email) {
+// 新規登録処理
+export async function signUp(email, password) {
   try {
-    const providers = await fetchSignInMethodsForEmail(auth, email);
+    // メールアドレスの重複確認
+    const providers = await checkEmailDuplicate(email);
+
     if (providers && providers.length > 0) {
       throw new Error("このメールアドレスは既に登録されています。");
+    } else {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      return user;
     }
-    return;
   } catch (error) {
     console.error("ユーザー登録エラーby Auth:", error.code, error.message);
     throw error; // throw: 呼び出し元に例外処理を投げる
   }
 }
 
-// 新規登録
-export async function signUp(email, password) {
-  try {
-    // メールアドレスの重複確認
-    await checkEmailDuplicate(email);
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-    return user;
-  } catch (error) {
-    console.error("ユーザー登録エラーby Auth:", error.code, error.message);
-    throw error;
-  }
+// ログイン中のユーザー情報を取得する関数
+export async function getCurrentUser() {
+  const user = auth.currentUser;
+  return user;
 }
 
-// ログイン
+// ログイン処理
 export async function login(email, password) {
   try {
-    await signInWithEmailAndPassword(auth, email, password);
-    return;
+    // Firebaseのログイン処理
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // ログイン成功後の処理を追加
+    return user;
   } catch (error) {
     console.error('ログインエラーby Auth', error);
-    throw error;
+    throw error; // throw: 呼び出し元に例外処理を投げる
   }
 }
 
-// ログアウト
+// ログアウト処理
 export async function logout() {
   try {
+    // Firebaseのログアウト処理
     await signOut(auth);
-    return;
   } catch (error) {
     console.error('ログアウトエラーby Auth', error);
-    throw error;
+    throw error; // throw: 呼び出し元に例外処理を投げる
   }
 }
 
 // 再認証
-async function reauthenticate(user, loginPassword) {
+async function reauthentication(loginPassword) {
   try {
-    const credential = EmailAuthProvider.credential(user.email, loginPassword);
-    // console.log(credential);
-    await reauthenticateWithCredential(user, credential);
-    return;
+    const user = auth.currentUser;
+    if (user) {
+      // ユーザーを再認証する
+      const credential = EmailAuthProvider.credential(user.email, loginPassword);
+      // console.log(credential);
+      await reauthenticateWithCredential(user, credential);
+
+      return;
+    }
   } catch (error) {
     console.error('ログアウトエラーby Auth', error);
-    throw error;
+    throw error; // throw: 呼び出し元に例外処理を投げる
   }
 }
 
-// メールアドレスを更新
-export async function updateEmailByAuth(currentPassword, newEmail) {
+// メールアドレスを更新する関数
+export async function updateEmailByAuth(user, newEmail) {
   try {
-    // メールアドレスの重複確認
-    await checkEmailDuplicate(newEmail);
-
-    const user = auth.currentUser;
 
     if (user) {
-      // 再認証
-      await reauthenticate(user, currentPassword)
       // メールアドレスを更新
       await updateEmail(user, newEmail);
 
@@ -107,15 +107,41 @@ export async function updateEmailByAuth(currentPassword, newEmail) {
   }
 }
 
+// メールアドレス更新チェック
+export async function checkEmail(submitEmail) {
+  try {
+    const user = auth.currentUser;
 
-// パスワードを更新
+    if (user) {
+      // メールアドレスを更新
+      if (user.email !== submitEmail) {
+        throw new Error("REAUTH_REQUIRED");
+      }
+
+      // 更新したメールアドレスに確認メールを送信
+      await updateEmailByAuth(submitEmail);
+
+    } else {
+      throw new Error("USER_NOT_LOGGED_IN");
+    }
+  } catch (error) {
+    console.error("メールアドレスの更新エラーby Auth:", error);
+    throw error;
+  }
+}
+
+
+
+// パスワードを更新する関数
 export async function updatePasswordByAuth(currentPassword, newPassword) {
   try {
     const user = auth.currentUser;
 
     if (user) {
-      // 再認証
-      await reauthenticate(user, currentPassword)
+      // ユーザーを再認証する
+      const credential = EmailAuthProvider.credential(user.email, currentPassword);
+      // console.log(credential);
+      await reauthenticateWithCredential(user, credential);
 
       // パスワード更新
       await updatePassword(user, newPassword);

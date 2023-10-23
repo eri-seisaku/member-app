@@ -1,6 +1,6 @@
 <template>
   <Dialog v-model:dialog="dialog" :size="448">
-    <template v-slot:text>
+    <template v-slot:content>
       <div>
         <form @submit.prevent="submit">
           <Password

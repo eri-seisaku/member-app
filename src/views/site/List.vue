@@ -13,7 +13,10 @@
         <template v-slot:top>
           <v-row class="my-8">
             <v-col cols="12" md="6">
-              <EightArea @selected="handleAreaSelected" />
+              <EightArea
+                @selected="handleAreaSelected"
+                @reset="handleTableReset"
+              />
             </v-col>
             <v-col cols="12" md="6">
               <SearchForm
@@ -42,15 +45,12 @@
 import { ref, onMounted } from 'vue';
 const initialMembers = ref([]); // 初期データを保持するプロパティ
 const filteredMembers = ref([]); // フィルタリングされたデータを保持するプロパティ
-
 const search = ref(''); // 八区分エリア用
-
 const searchData = ref({
     keyword: '',
     state: '',
     specialty: '',
 });
-
 const loadingMembers = ref(true);
 const itemsPerPage = 20;
 const headers = [

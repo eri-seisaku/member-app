@@ -2,7 +2,10 @@
   <v-row no-gutters>
     <v-col cols="1" v-for="index in 144">
       <div
-        :class="getDynamicClass(index)"
+        :class="[
+          getDynamicClass(index),
+          { opacity: selectedArea !== null && !selectedArea.numbers.includes(index) }
+        ]"
         @click="getNumber(index)"
       >
         <!-- {{ index }} -->
@@ -13,7 +16,7 @@
 
 <script setup>
 import { ref } from 'vue';
-const message = ref('');
+const selectedArea = ref(null);
 
 const areas = [
   { numbers: [10, 11, 12, 22, 23, 24, 34], className: 'hokkaido', areaName: '北海道' },
@@ -28,10 +31,10 @@ const areas = [
 
 const getDynamicClass = (index) => {
   const numberClass = {
-    // white: true,
-    area: true
+    area: true,
+    // white: true, // trueにするとクラスが全番号に付与
+    // opacity: true
   };
-
   const area = areas.find(area => area.numbers.includes(index));
   if (area) {
     numberClass[area.className] = true;
@@ -42,19 +45,21 @@ const getDynamicClass = (index) => {
 
 // 子→親へ
 const emit = defineEmits([
-  'selected'
+  'selected',
+  'reset'
 ]);
 
 const getNumber = (index) => {
   const area = areas.find(area => area.numbers.includes(index));
   if (area) {
-    message.value = area.areaName;
-    // エリア名を親コンポーネントに渡す
-    emit('selected', area.areaName);
+    emit('selected', area.areaName); // エリア名を親コンポーネントに渡す
+    selectedArea.value = area; // 選択したエリアを保持
+
+  } else {
+    selectedArea.value = null;
+    emit('reset');
   }
 };
-
-
 
 
 </script>
@@ -65,13 +70,6 @@ a {
 }
 .area {
   height: 2em;
-}
-.white {
-  background: #fff;
-}
-.gray {
-  background: gray;
-  border: 1px solid #fff;
 }
 .hokkaido {
   background: #7ab7f0;
@@ -113,5 +111,7 @@ a {
   border-style: none;
   cursor: pointer;
 }
-
+.opacity {
+  opacity: 0.6;
+}
 </style>
