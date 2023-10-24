@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="pa-6 ma-6" rounded align="center">
+  <!-- <v-sheet class="pa-6 ma-6" rounded align="center"> -->
     <v-avatar
       color="grey"
       size="150"
@@ -7,7 +7,7 @@
       <v-img cover :src="imageSrc"></v-img>
     </v-avatar>
     <!-- <h4 class="mt-2 text-subtitle-1">{{ userName }}</h4> -->
-  </v-sheet>
+  <!-- </v-sheet> -->
 </template>
 
 

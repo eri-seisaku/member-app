@@ -5,10 +5,7 @@
   <v-text-field
     density="compact"
     variant="outlined"
-    :form="form"
-    :type="type"
-    :required="required"
-    :disabled="disabled"
+    :error-messages="errorMsg"
     v-model="parentValue"
   ></v-text-field>
 </template>
@@ -19,10 +16,7 @@ import { computed } from 'vue';
 // 親から子へ
 const props = defineProps({
   label: String,
-  form: String,
-  type: String,
-  required: Boolean,
-  disabled: Boolean,
+  errorMsg: String,
   inputValue: String
 });
 

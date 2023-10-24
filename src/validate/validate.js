@@ -15,8 +15,11 @@ setLocale({
 const commonSchema = {
   name: string().required(),
   officeName: string().required(),
-  email: string().email().required(),
 };
+export const authSchema = object({
+  email: string().email().required(),
+  password: string().required(),
+});
 
 export const profileSchema = commonSchema;
 
@@ -25,6 +28,7 @@ export const validationSchema = object({
   // officeName: string().required(),
   // email: string().email().required(),
   ...commonSchema,
+  email: string().email().required(),
   zipCode: string().length(7, '郵便番号はハイフンなしの7桁で入力する必要があります').required(),
   state: string().required(),
   address: string().required(),
@@ -52,7 +56,7 @@ export const validationSchema = object({
   website: string().url('有効なURLを入力してください。').nullable(),
 });
 
-export const passwordValidationSchema = object({
+export const passwordSchema = object({
   currentPassword: string().required(),
   newPassword: string()
     .matches(

@@ -198,8 +198,8 @@ const visible = ref(false); // password表示非表示
 import Confirm from '@/views/site/child_signup/Confirm.vue';
 
 // router
-const router = useRouter();
 import { useRouter } from 'vue-router';
+const router = useRouter();
 
 // validation
 import { useField, useForm } from 'vee-validate';

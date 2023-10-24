@@ -22,7 +22,7 @@ export async function setData(user, fieldName, userData) {
   }
 }
 
-// 追加登録
+// 追加登録 userDataは連想配列を期待している
 export async function addData(user, fieldName, userData) {
   try {
     const userCollection = collection(db, fieldName);

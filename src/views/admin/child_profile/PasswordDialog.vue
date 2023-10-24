@@ -2,7 +2,13 @@
   <Dialog v-model:dialog="dialog" :size="450">
     <template v-slot:content>
       <v-row>
-        <v-col cols="12">
+        <v-col cols="12" v-if="message || errorMessage">
+          <Alert
+            :color="message ? 'primary' : 'red'"
+            :text="message ? message : errorMessage"
+          />
+        </v-col>
+        <v-col cols="12" v-if="changePasswordMode">
           <form @submit.prevent="submit" id="passwordForm">
             <div v-for="fieldInfo in fields" :key="fieldInfo.key" class="mb-2">
               <label class="text-subtitle-1 text-medium-emphasis">
@@ -34,25 +40,14 @@
             </div>
             <div class="d-flex justify-end mt-4">
               <v-btn
-                color="member"
+                variant="outlined"
                 type="submit"
                 class="mb-4"
-                form="passwordFrom"
               >
-                <v-icon
-                  start
-                  icon="mdi-content-save"
-                ></v-icon>
-                更新
+                SUBMIT
               </v-btn>
             </div>
           </form>
-        </v-col>
-        <v-col cols="12" v-if="message || errorMessage">
-          <Alert
-            :color="message ? 'primary' : 'red'"
-            :text="message ? message : errorMessage"
-          />
         </v-col>
       </v-row>
     </template>
@@ -64,6 +59,8 @@ import { ref, watch } from 'vue';
 // 初期値設定
 const dialog = ref(false);
 const visible = ref(false);
+const changePasswordMode = ref(true);
+
 const message = ref('');
 const errorMessage = ref('');
 
@@ -73,10 +70,10 @@ import Alert from '@/components/Alert.vue';
 
 // validation
 import { useField, useForm } from 'vee-validate';
-import { passwordValidationSchema } from '@/validate/validate';
+import { passwordSchema } from '@/validate/validate';
 
 const { handleSubmit } = useForm({
-  validationSchema: passwordValidationSchema,
+  validationSchema: passwordSchema,
 });
 
 const fields = [
@@ -104,6 +101,8 @@ const submit = handleSubmit(async (values) => {
       return;
     }
     await updatePasswordByAuth(values.currentPassword, values.newPassword);
+
+    changePasswordMode.value = false;
 
     errorMessage.value = '';
     message.value = 'パスワードの更新に成功しました。';
@@ -135,7 +134,3 @@ fields.forEach(fieldInfo => {
 });
 
 </script>
-
-<style>
-
-</style>
