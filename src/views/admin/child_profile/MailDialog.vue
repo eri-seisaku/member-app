@@ -74,6 +74,8 @@ const props = defineProps({
   authVal: Object
 });
 
+console.log(props.authVal);
+
 // validation
 import { useField, useForm } from 'vee-validate';
 import { authSchema } from '@/validate/validate';
@@ -92,7 +94,7 @@ import Alert from '@/components/Alert.vue';
 
 // firebase
 import { updateEmailByAuth } from '@/firebase/auth';
-import { updateData } from '@/firebase/firestore';
+import { updateOneLevelData } from '@/firebase/firestore';
 
 const submit = handleSubmit(async (values) => {
   try {
@@ -109,7 +111,7 @@ const submit = handleSubmit(async (values) => {
     // console.log(userData);
 
     // firestore更新
-    await updateData(props.authVal.uid, "members", userData);
+    await updateOneLevelData(props.authVal.uid, "members", userData);
 
     changeMailMode.value = false;
 

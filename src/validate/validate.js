@@ -16,10 +16,7 @@ const commonSchema = {
   name: string().required(),
   officeName: string().required(),
 };
-export const authSchema = object({
-  email: string().email().required(),
-  password: string().required(),
-});
+
 
 export const profileSchema = commonSchema;
 
@@ -56,6 +53,7 @@ export const validationSchema = object({
   website: string().url('有効なURLを入力してください。').nullable(),
 });
 
+// profile用
 export const passwordSchema = object({
   currentPassword: string().required(),
   newPassword: string()
@@ -67,6 +65,12 @@ export const passwordSchema = object({
     .max(64, 'パスワードは64文字以下である必要があります')
     .required(),
     confirmPassword: string().required(),
+});
+
+// profile用
+export const authSchema = object({
+  email: string().email().required(),
+  password: string().required(),
 });
 
 export const portfolioValidationSchema = object({

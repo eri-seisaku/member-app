@@ -86,7 +86,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { auth } from '@/firebase/firebase';
-import { getData, updateData } from '@/firebase/firestore';
+import { getOneLevelData, updateOneLevelData } from '@/firebase/firestore';
 import { emailCheck, logout } from '@/firebase/auth';
 
 // 各コンポーネントインポート
@@ -117,7 +117,7 @@ const errorMessage = ref('');
 onMounted(async () => {
   try {
     // Firestoreからユーザーの情報を取得し、userDataにセット
-    const userDoc = await getData(user.uid, "members");
+    const userDoc = await getOneLevelData(user.uid, "members");
     userData.value = userDoc;
   } catch (error) {
     console.error('ユーザーデータ取得エラー', error);
@@ -130,7 +130,7 @@ const submitProfileForm = async () => {
     await emailCheck(userData.value.email);
 
     // Firestoreにユーザー情報を更新
-    await updateData(user.uid, "members", userData.value);
+    await updateOneLevelData(user.uid, "members", userData.value);
 
 
     // パスワードの更新
@@ -153,7 +153,7 @@ const submitProfileForm = async () => {
 //     console.log(userData.value.email); // デバック
 
 //     // Firestoreにユーザー情報を更新
-//     await updateData(user.uid, "members", userData.value);
+//     await updateOneLevelData(user.uid, "members", userData.value);
 
 //     // メールアドレスの更新
 //     await updateEmailByAuth(userData.value.email);

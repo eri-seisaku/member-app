@@ -231,7 +231,7 @@ const chips = [
 
 // firebase
 import { signUp } from '@/firebase/auth';
-import { setData } from '@/firebase/firestore';
+import { setOneLevelData } from '@/firebase/firestore';
 
 // utils
 import { states, setEightArea } from '@/utils/states'; // 都道府県,八区分
@@ -286,7 +286,7 @@ const submit = handleSubmit(async (values) => {
           joinData: new Date(),
         };
 
-        await setData(user, "members", userData);
+        await setOneLevelData(user.uid, "members", userData);
 
         // 登録が成功した場合
         router.push('/admin');

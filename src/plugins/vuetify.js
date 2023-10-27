@@ -24,6 +24,7 @@ export default createVuetify({
         },
       },
     },
+    // options: { customProperties: true, variations: false },
   },
 })
 

@@ -31,14 +31,14 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 const navMenus = ref([]);
+const user = ref('');
 
-// components
+// component
 import HoverIconCard  from '@/components/cards/HoverIconCard.vue';
 
 // firebase
-import { auth } from '@/firebase/firebase';
-const user = auth.currentUser;
-import { getData } from '@/firebase/firestore';
+import { getCurrentUser } from '@/firebase/auth';
+import { getOneLevelData } from '@/firebase/firestore';
 
 // menu
 import { getMenu } from '@/router/menu';
@@ -46,8 +46,10 @@ import { getMenu } from '@/router/menu';
 // メニュー取得
 onMounted(async () => {
   try {
-    const userDoc = await getData(user.uid, "members");
-    const menu = getMenu(user, userDoc.role);
+    user.value = await getCurrentUser(); // user情報
+    const userDoc = await getOneLevelData(user.value.uid, "members");
+    const menu = getMenu(user.value, userDoc.role);
+
     navMenus.value = menu;
   } catch (error) {
     console.error('ユーザーデータ取得エラー', error);

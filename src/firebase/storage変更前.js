@@ -7,18 +7,18 @@ import {
 } from "firebase/storage";
 
 
-export async function upload(directoryName, fileData, userId) {
+export async function upload(fileData, userId) {
   try {
-    // ファイルを保存するパス
-    const filePath = `${directoryName}/${userId}/${fileData.name}`;
+    // ファイルの名前を変える
+    const fileName = `profile_${userId}`;
 
-    const storageRef = ref(storage, filePath); // Storageの参照を作成
+    const imageRef = ref(storage, fileName); // Storageの参照を作成
 
-    const metadata = {
-      contentType: fileData.type,
-    }
+    const metadata = await getMetadata(imageRef); // ファイルのメタデータを取得
 
-    const snapshot = await uploadBytesResumable(storageRef, fileData, metadata);
+    const allowedContentTypes = ['image/jpeg', 'image/png', 'image/gif']; // 許可するコンテンツタイプのリスト
+
+    const snapshot = await uploadBytesResumable(imageRef, fileData, metadata);
     const url = await getDownloadURL(snapshot.ref);
 
     return url;
@@ -28,7 +28,6 @@ export async function upload(directoryName, fileData, userId) {
     throw error; // throw: 呼び出し元に例外処理を投げる
   }
 }
-
 export async function createFirebase(title, fileData) {
   try {
     const metadata = {

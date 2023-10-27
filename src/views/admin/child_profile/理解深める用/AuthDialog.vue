@@ -74,14 +74,14 @@ import Alert from '@/components/Alert.vue';
 
 // firebase
 import { updateEmailByAuth } from '@/firebase/auth';
-import { updateData } from '@/firebase/firestore';
+import { updateOneLevelData } from '@/firebase/firestore';
 
 const submit = async () => {
   try {
     await updateEmailByAuth(password.value, props.submitVal.email);
 
     // ユーザー情報を更新
-    await updateData(props.authVal.uid, "members", props.submitVal);
+    await updateOneLevelData(props.authVal.uid, "members", props.submitVal);
 
     errorMessage.value = '';
     message.value = 'ユーザー情報の更新に成功しました。';

@@ -76,14 +76,19 @@ const adminRoutes = [
         meta: { title: 'PROFILE'}
       },
       {
+        path: '/admin/list',
+        component: () => import('@/views/admin/PortfolioList.vue'),
+        meta: { title: 'LIST'}
+      },
+      {
+        path: '/admin/portfolio/:portfolioId',
+        component: () => import('@/views/admin/Edit.vue'),
+        meta: { title: 'EDIT'}
+      },
+      {
         path: '/admin/post',
         component: () => import('@/views/admin/Post.vue'),
         meta: { title: 'POST'}
-      },
-      {
-        path: '/admin/edit',
-        component: () => import('@/views/admin/Edit.vue'),
-        meta: { title: 'EDIT'}
       },
       {
         path: '/admin/test',

@@ -3,7 +3,7 @@
     <template v-slot:content>
       <v-row>
         <v-col cols="12">
-          <p class="text-subtitle-1 text-medium-emphasis">画像をアップロードしてください。</p>
+          <p class="text-subtitle-1 text-medium-emphasis">画像をアップロードしてください。<br>※アップロードできるファイル形式は、JPEG/PNGのみです。</p>
         </v-col>
         <v-col cols="12" v-if="message || errorMessage">
           <Alert
@@ -12,6 +12,11 @@
           />
         </v-col>
         <v-col cols="12">
+          <DragFileInput
+            v-model:errorMessage="errorMessage"
+            @update:filesUploaded="handleFilesUploaded"
+            :authVal="props.authVal"
+          />
         </v-col>
       </v-row>
     </template>
@@ -19,15 +24,61 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 // 初期値設定
 const dialog = ref(false);
 
 const message = ref('');
 const errorMessage = ref('');
 
+// 親から子へ
+const props = defineProps({
+  authVal: Object
+});
+
+console.log(props.authVal);
+
+// 子→親へ
+const emit = defineEmits([
+  'update:profileIconUrl'
+]);
+
+
 // components
 import Dialog from '@/components/Dialog.vue';
+import DragFileInput from '@/components/inputs/DragFileInput.vue';
 import Alert from '@/components/Alert.vue';
+
+
+// firebase
+import { upload } from '@/firebase/storage';
+import { updateOneLevelData } from '@/firebase/firestore';
+
+// ファイルがアップロードされた時のハンドラ
+const handleFilesUploaded = async (files) => {
+  console.log('Received uploaded files:', files);
+  console.log('Received uploaded files:', files[0].type);
+  try {
+    const url = await upload("profile", files[0], props.authVal.uid);
+
+    // 登録前にデータを加工
+    const userData = {
+      profileIcon: url
+    };
+
+    // firestore更新
+    await updateOneLevelData(props.authVal.uid, "members", userData);
+
+    emit('update:profileIconUrl', url); // 子→親へ
+
+    errorMessage.value = '';
+    message.value = 'ユーザー情報の更新に成功しました。';
+
+    console.log(url);
+  } catch (error) {
+    console.error(error);
+    errorMessage.value = 'ユーザー情報の変更に失敗しました。';
+  }
+}
 
 </script>

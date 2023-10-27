@@ -118,7 +118,7 @@ const fields = [
 
 // firebase
 import { getCurrentUser } from '@/firebase/auth';
-import { getData, updateData } from '@/firebase/firestore';
+import { getOneLevelData, updateOneLevelData } from '@/firebase/firestore';
 
 // utils
 import { formatDate } from '@/utils/formatDate';
@@ -127,7 +127,7 @@ onMounted(async () => {
   try {
     user.value = await getCurrentUser();
     // console.log(user.value.uid);
-    const userDoc = await getData(user.value.uid, "members");
+    const userDoc = await getOneLevelData(user.value.uid, "members");
     const formattedDate = await formatDate(userDoc.joinData);
 
     // Firestoreから取得したデータを各フィールドに設定
@@ -159,7 +159,7 @@ const submit = handleSubmit(async (values) => {
       authDialog.value = true;
     } else {
       // ユーザー情報を更新
-      await updateData(user.value.uid, "members", values);
+      await updateOneLevelData(user.value.uid, "members", values);
       // パスワードの更新
       message.value = 'ユーザー情報の更新に成功しました。';
     }

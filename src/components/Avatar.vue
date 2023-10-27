@@ -4,7 +4,12 @@
       color="grey"
       size="150"
     >
-      <v-img cover :src="imageSrc"></v-img>
+      <v-img
+        cover
+        :src="imageSrc"
+        :width="150"
+        aspect-ratio="1/1"
+      ></v-img>
     </v-avatar>
     <!-- <h4 class="mt-2 text-subtitle-1">{{ userName }}</h4> -->
   <!-- </v-sheet> -->

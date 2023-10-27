@@ -62,11 +62,11 @@ import Accordion from '@/views/site/child_detail/Accordion.vue';
 import LinkIcon from '@/components/text/LinkIcon.vue';
 
 // firebase
-import { getData } from '@/firebase/firestore';
+import { getOneLevelData } from '@/firebase/firestore';
 
 onMounted(async () => {
   try {
-    const userDoc = await getData(route.params.userId, "members");
+    const userDoc = await getOneLevelData(route.params.userId, "members");
 
     readData.value = userDoc;
 

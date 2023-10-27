@@ -47,7 +47,7 @@ export const getMenu = (user, userRole) => {
       {
         icon: 'mdi-file-account',
         title: 'PORTFOLIO',
-        to: '/admin/post'
+        to: '/admin/list' // postから変更
       },
       {
         to: '',

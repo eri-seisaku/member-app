@@ -41,8 +41,8 @@
 </template>
 
 <script setup>
-// 初期値
 import { ref, onMounted } from 'vue';
+// 初期値
 const initialMembers = ref([]); // 初期データを保持するプロパティ
 const filteredMembers = ref([]); // フィルタリングされたデータを保持するプロパティ
 const search = ref(''); // 八区分エリア用
@@ -73,14 +73,14 @@ import EightArea from '@/views/site/child_list/EightArea.vue';
 import SearchForm from '@/views/site/child_list/SearchForm.vue';
 
 // firebase
-import { getAllData } from '@/firebase/firestore';
+import { getOneLevelAllData } from '@/firebase/firestore';
 
 // utils
 import { formatDate } from '@/utils/formatDate'; // 日付形式変換
 
 onMounted(async () => {
   try {
-    const allDoc = await getAllData("members");
+    const allDoc = await getOneLevelAllData("members");
 
     // members.value = allDoc.map(doc => {
 

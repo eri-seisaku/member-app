@@ -102,7 +102,7 @@ const title = computed(() => {
 
 // firebase
 import { getCurrentUser, logout } from '@/firebase/auth';
-import { getData } from '@/firebase/firestore';
+import { getOneLevelData } from '@/firebase/firestore';
 
 // menu
 import { getMenu } from '@/router/menu';
@@ -111,7 +111,8 @@ import { getMenu } from '@/router/menu';
 onMounted(async () => {
   try {
     user.value = await getCurrentUser();
-    const userDoc = await getData(user.value.uid, "members");
+    const userDoc = await getOneLevelData(user.value.uid, "members");
+
     const menu = getMenu(user.value, userDoc.role);
 
     if (userDoc.role === '管理者') {

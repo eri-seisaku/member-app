@@ -140,7 +140,7 @@ const editData = [
 
 // firebase
 import { getCurrentUser } from '@/firebase/auth';
-import { getData, updateData } from '@/firebase/firestore';
+import { getOneLevelData, updateOneLevelData } from '@/firebase/firestore';
 
 // utils
 import { formatDate } from '@/utils/formatDate';
@@ -148,7 +148,7 @@ import { formatDate } from '@/utils/formatDate';
 onMounted(async () => {
   try {
     user.value = await getCurrentUser(); // user情報
-    const userDoc = await getData(user.value.uid, "members"); // 全データ
+    const userDoc = await getOneLevelData(user.value.uid, "members"); // 全データ
     const formattedDate = await formatDate(userDoc.joinData); // 日付変換
 
     // dbから取得したデータを各フィールドに設定
@@ -180,7 +180,7 @@ const mailDialogOpen = () => {
 const submit = handleSubmit(async (values) => {
   try {
     // ユーザー情報を更新
-    await updateData(user.value.uid, "members", values);
+    await updateOneLevelData(user.value.uid, "members", values);
     message.value = 'ユーザー情報の更新に成功しました。';
   } catch (error) {
     console.error('ユーザーデータ更新エラー', error);

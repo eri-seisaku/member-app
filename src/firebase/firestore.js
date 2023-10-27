@@ -6,74 +6,137 @@ import {
   addDoc, // 登録(追加)
   getDoc, // 取得
   getDocs, // 全て取得
-  updateDoc // 更新
+  updateDoc, // 更新
+  // arrayUnion // 配列内の一意の値を追加
 } from "firebase/firestore";
 
-// 新規登録(上書き)
-export async function setData(user, fieldName, userData) {
+
+
+// ここから下はOK---------------------------------------------------
+// 更新 - 1階層
+export async function updateOneLevelData(userId, collectionName,arrayData) {
   try {
-    const userCollection = collection(db, fieldName);
-    const userRef = doc(userCollection, user.uid);
-    await setDoc(userRef, userData);
-    return userRef;
+    const docRef = doc(db, collectionName, userId);
+
+    await updateDoc(docRef, arrayData);
   } catch (error) {
-    console.error("Firestoreへのデータ保存エラーby Firestore:", error);
+    console.error("更新エラーby Firestore:", error);
+    throw error;
+  }
+}
+
+// 新規(上書き) - 1階層(ドキュメントIDを指定して保存SignUp.vue用)
+export async function setOneLevelData(userID, collectionName, arrayData) {
+  try {
+    const collectionRef = collection(db, collectionName);
+    const docRef = doc(collectionRef, userID);
+
+    await setDoc(docRef, arrayData);
+
+  } catch (error) {
+    console.error("保存エラーby Firestore:", error);
     throw error; // throw: 呼び出し元に例外処理を投げる
   }
 }
 
-// 追加登録 userDataは連想配列を期待している
-export async function addData(user, fieldName, userData) {
+// 追加 - 特定 - 1階層
+export async function addOneLevelData(collectionName, arrayData) {
   try {
-    const userCollection = collection(db, fieldName);
-    await addDoc(userCollection, userData);
+    const collectionRef = collection(db, collectionName);
+
+    await addDoc(collectionRef, arrayData);
   } catch (error) {
-    console.error("Firestoreへのデータ保存エラーby Firestore:", error);
+    console.error("保存エラーby Firestore:", error);
     throw error;
   }
 }
 
-// 取得 - プロフィール
-export async function getData(userId, fieldName) {
+// 追加 - 特定 - 2階層
+export async function addTwoLevelData(userID, arrayData, firstCollectionName, secondCollectionName) {
   try {
-    const userRef = doc(db, fieldName, userId);
-    const userDoc = await getDoc(userRef);
-    if (userDoc.exists()) {
-      return userDoc.data();
+    const docRef = doc(db, firstCollectionName, userID);
+    const collectionRef = collection(docRef, secondCollectionName);
+
+    await addDoc(collectionRef, arrayData);
+
+  } catch (error) {
+    console.error("保存エラーby Firestore:", error);
+    throw error;
+  }
+}
+
+// 取得 - 特定 - 1階層
+export async function getOneLevelData(userId, collectionName) {
+  try {
+    const docRef = doc(db, collectionName, userId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      return docSnap.data();
     } else {
-      throw new Error("ユーザーデータが見つかりません");
+      throw new Error("データが見つかりません");
     }
   } catch (error) {
-    console.error('ユーザーデータ取得エラーby Firestore', error);
+    console.error('取得エラーby Firestore', error);
     throw error;
   }
 }
 
-// 更新
-export async function updateData(userId, fieldName, updatedData) {
+// 取得 - 特定 - 2階層
+export async function getTwoLevelData(userId, docID, firstCollectionName, secondCollectionName) {
   try {
-    const userDocRef = doc(db, fieldName, userId);
-    await updateDoc(userDocRef, updatedData);
+    const firstDocRef = doc(db, firstCollectionName, userId);
+    const collectionRef = collection(firstDocRef, secondCollectionName);
+
+    const secondDocRef = doc(collectionRef, docID);
+    const docSnap = await getDoc(secondDocRef);
+
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      throw new Error("データが見つかりません");
+    }
   } catch (error) {
-    console.error("ユーザーデータの更新エラーby Firestore:", error);
+    console.error('取得エラーby Firestore', error);
     throw error;
   }
 }
 
-// 全データ取得
-export async function getAllData(collectionName) {
-  try {
-    const allData = [];
-    const querySnapshot = await getDocs(collection(db, collectionName));
-    querySnapshot.forEach((doc) => {
 
+// 取得 - 全 - 1階層(コレクション名-ドキュメント名-フィールド)
+export async function getOneLevelAllData(collectionName) {
+  try {
+    const querySnapshot = await getDocs(collection(db, collectionName));
+    const allData = [];
+
+    querySnapshot.forEach((doc) => {
       allData.push(doc.data())
-    })
+    });
+
     return allData;
   } catch (error) {
-    console.error('ユーザーデータ取得エラーby Firestore', error);
+    console.error('取得エラーby Firestore:', error);
     throw error;
   }
 }
 
+// 取得 - 全 - 2階層(コレクション名-ドキュメント名-コレクション名-ドキュメント名-フィールド)
+export async function getTwoLevelAllData(userId, firstCollectionName, secondCollectionName) {
+  try {
+    const docRef = doc(db, firstCollectionName, userId);
+    const collectionRef = collection(docRef, secondCollectionName);
 
+    const querySnapshot = await getDocs(collectionRef);
+    const allData = [];
+
+    querySnapshot.forEach((doc) => {
+      allData.push({ id: doc.id, ...doc.data() }); // IDも一緒に
+      // allData.push(doc.data()); // IDなし
+    });
+
+    return allData;
+  } catch (error) {
+    console.error('取得エラーby Firestore:', error);
+    throw error;
+  }
+}

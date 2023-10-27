@@ -28,6 +28,14 @@ const message = ref('');
 const errorMessage = ref('');
 const user = ref('');
 
+const props = defineProps({
+  authVal: Object,
+  dbVal: Object,
+});
+
+console.log(props.authVal);console.log(props.dbVal);
+console.log(props.authVal.uid);console.log(props.dbVal.name);
+
 // components
 import Avatar from '@/components/Avatar.vue';
 import ImageDialog from '@/views/admin/child_profile/ImageDialog.vue';
