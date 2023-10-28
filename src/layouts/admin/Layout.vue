@@ -28,7 +28,13 @@
           class="mb-4"
           color="white"
           size="64"
-        ></v-avatar>
+        >
+        <v-img
+          cover
+          :src="userData.profileIcon"
+          aspect-ratio="1/1"
+        ></v-img>
+        </v-avatar>
 
         <div>{{ user.email }}</div>
       </v-sheet>
@@ -89,7 +95,9 @@ import { ref, computed, onMounted } from "vue";
 const drawer = ref(null);
 const color = ref('');
 const navMenus = ref([]);
-const user = ref('');
+
+const user = ref(''); // authのデータ用
+const userData = ref({}); // firestoreのデータ用
 
 // router
 import { useRoute, useRouter } from "vue-router";
@@ -112,6 +120,8 @@ onMounted(async () => {
   try {
     user.value = await getCurrentUser();
     const userDoc = await getOneLevelData(user.value.uid, "members");
+
+    userData.value = userDoc;
 
     const menu = getMenu(user.value, userDoc.role);
 
