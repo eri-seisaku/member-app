@@ -93,7 +93,7 @@ const props = defineProps({
   multiple: Boolean,
 });
 
-// 子→親へ
+// 子から親へ
 const emit = defineEmits([
   'update:dialog', // ダイアログの開閉
   'update:filesUploaded', // ファイル情報
@@ -106,7 +106,7 @@ const parentDialog = computed({
   set: (val) => emit('update:dialog', val),
 });
 
-// 子→親へ
+// 子から親へ
 const closeDialog = () => emit('update:dialog', false);
 
 // 初期化
@@ -123,7 +123,7 @@ const addFiles = (files) => {
 
   } else {
     errorMessage.value = "アップロードするファイルがありません。";
-    emit('update:errorMessage', errorMessage.value); // 子→親へ
+    emit('update:errorMessage', errorMessage.value); // 子から親へ
     closeDialog();
   }
 }
@@ -134,7 +134,7 @@ const onDrop = (e) => {
 
   if (!props.multiple && e.dataTransfer.files.length > 1) {
     errorMessage.value = "一度にアップロードできるファイルは 1 つだけです。";
-    emit('update:errorMessage', errorMessage.value); // 子→親へ
+    emit('update:errorMessage', errorMessage.value);
 
   } else {
     errorMessage.value = '';
@@ -172,7 +172,7 @@ const validateImage = (file) => {
   } catch (error) {
     // バリデーションエラー時
     errorMessage.value = error.message;
-    emit('update:errorMessage', errorMessage.value); // 子→親へ
+    emit('update:errorMessage', errorMessage.value);
   }
 };
 
@@ -208,11 +208,11 @@ const submit = async () => {
 // const submit = () => {
 //   if (uploadedFiles.value.length > 0) {
 //     errorMessage.value = '';
-//     emit('update:filesUploaded', uploadedFiles.value); // 子→親へ
+//     emit('update:filesUploaded', uploadedFiles.value);
 //     closeDialog();
 //   } else {
 //     errorMessage.value = "アップロードするファイルがありません。";
-//     emit('update:errorMessage', errorMessage.value); // 子→親へ
+//     emit('update:errorMessage', errorMessage.value);
 //   }
 // }
 

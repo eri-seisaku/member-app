@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="12">
         <v-btn
-          class="mr-4"
+          class="bg-white"
           variant="outlined"
           href='/admin/post'
         >
@@ -11,27 +11,29 @@
         </v-btn>
       </v-col>
       <v-col cols="12">
-        <v-data-table
-          v-model:items-per-page="itemsPerPage"
-          :headers="headers"
-          :items="portfolios"
-          :loading="loading"
-        >
-          <template v-slot:item.id="{ item }">
-            <v-btn
-              variant="text"
-              @click="moveNextPage(item.columns.id)"
-            ><v-icon> mdi-pencil </v-icon>編集</v-btn>
-          </template>
-          <template v-slot:item.filePath="{ item }">
-            <v-img
-            :width="100"
-            :src="item.columns.filePath"
-            class="pa-6"
-            ></v-img>
-            <!-- {{ item }} -->
-          </template>
-        </v-data-table>
+        <v-sheet class="pa-2" rounded>
+          <v-data-table
+            v-model:items-per-page="itemsPerPage"
+            :headers="headers"
+            :items="portfolios"
+            :loading="loading"
+          >
+            <template v-slot:item.id="{ item }">
+              <v-btn
+                variant="text"
+                @click="moveNextPage(item.columns.id)"
+              ><v-icon> mdi-pencil </v-icon>編集</v-btn>
+            </template>
+            <template v-slot:item.filePath="{ item }">
+              <v-img
+              :width="100"
+              :src="item.columns.filePath"
+              class="pa-6"
+              ></v-img>
+              <!-- {{ item }} -->
+            </template>
+          </v-data-table>
+        </v-sheet>
       </v-col>
     </v-row>
   </v-container>
@@ -56,11 +58,11 @@ const headers = [
     sortable: false, // ソート
     key: 'id',
   },
-  { title: 'タイトル', align: 'end', key: 'title' },
-  { title: 'コメント', align: 'end', key: 'comment' },
-  { title: '日付', align: 'end', key: 'date' },
-  { title: '画像', align: 'end', key: 'filePath' },
-  { title: 'webサイト', align: 'end', key: 'website' },
+  { title: 'タイトル', align: 'start', key: 'title' },
+  { title: 'コメント', align: 'start', key: 'comment' },
+  { title: '日付', align: 'start', key: 'date' },
+  { title: '画像', align: 'start', key: 'filePath' },
+  { title: 'webサイト', align: 'start', key: 'website' },
 ];
 
 // firebase

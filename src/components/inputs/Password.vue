@@ -27,7 +27,7 @@ const props = defineProps({
   inputValue: String
 });
 
-// 子→親へ
+// 子から親へ
 const emit = defineEmits([
   'update:inputValue'
 ]);

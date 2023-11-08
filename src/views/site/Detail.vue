@@ -13,7 +13,7 @@
           ></v-img>
         </v-avatar>
         <div class="text-center text-md-left">
-          <!-- <p>ユーザーID: {{ $route.params.userId }}</p> -->
+          <!-- <p>ユーザーID: {{ $route.params.userID }}</p> -->
           <a
             class="d-block text-grey-lighten-1 mx-2 custom-hover"
             href="https://webdeveloper.com"
@@ -55,7 +55,7 @@ const readData = ref({});
 import { useRoute } from "vue-router";
 const route = useRoute();
 
-console.log(route.params.userId); // userId取得
+console.log(route.params.userID); // userId取得
 
 // components
 import Accordion from '@/views/site/child_detail/Accordion.vue';
@@ -66,7 +66,7 @@ import { getOneLevelData } from '@/firebase/firestore';
 
 onMounted(async () => {
   try {
-    const userDoc = await getOneLevelData(route.params.userId, "members");
+    const userDoc = await getOneLevelData(route.params.userID, "members");
 
     readData.value = userDoc;
 

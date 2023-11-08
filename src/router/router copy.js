@@ -3,10 +3,8 @@ import {
   createWebHistory,
   START_LOCATION // 遷移を判定するため
 } from 'vue-router'
-
 import { auth } from '@/firebase/firebase';
-import { getCurrentUser } from '@/firebase/auth';
-import { getOneLevelData } from '@/firebase/firestore';
+
 
 // 会員サイトルート
 const siteRoutes = [
@@ -67,43 +65,53 @@ const adminRoutes = [
     meta: { requiresAuth: true },
     children: [
       {
-        path: '/admin', // 管理者,正会員,組合員
+        path: '/admin',
         name: 'Admin',
         component: () => import('@/views/admin/Admin.vue'),
         meta: { title: 'DASHBOARD'}
       },
       {
-        path: '/admin/profile/:userID', // 管理者,正会員,組合員
+        path: '/admin/profile/:userID',
         component: () => import('@/views/admin/Profile.vue'),
         meta: { title: 'PROFILE'}
       },
       {
-        path: '/admin/portfolio-list', // 管理者,正会員
-        component: () => import('@/views/admin/PortfolioList.vue'),
+        path: '/admin/list',
+        component: () => import('@/views/admin/List.vue'),
         meta: { title: 'LIST'}
       },
       {
-        path: '/admin/portfolio/:portfolioID', // 管理者,正会員
+        path: '/admin/portfolio/:portfolioID',
         component: () => import('@/views/admin/Edit.vue'),
         meta: { title: 'EDIT'}
       },
       {
-        path: '/admin/post', // 管理者,正会員
+        path: '/admin/post',
         component: () => import('@/views/admin/Post.vue'),
         meta: { title: 'POST'}
       },
       {
-        path: '/admin/administrator/export-import', // 管理者
+        path: '/admin/test',
+        component: () => import('@/views/admin/Test.vue'),
+        meta: { title: 'TEST'}
+      },
+      { // 管理者用
+        path: '/admin/administrator/',
+        component: () => import('@/views/admin/administrator/Admin.vue'),
+        meta: { title: 'DASHBOARD'}
+      },
+      { // 管理者用
+        path: '/admin/administrator/export-import',
         component: () => import('@/views/admin/administrator/ExportImport.vue'),
         meta: { title: 'EXPORT IMPORT'}
       },
-      {
-        path: '/admin/administrator/member-list', // 管理者
-        component: () => import('@/views/admin/administrator/MemberList.vue'),
+      { // 管理者用
+        path: '/admin/administrator/list',
+        component: () => import('@/views/admin/administrator/List.vue'),
         meta: { title: 'LIST'}
       },
-      {
-        path: '/admin/administrator/approval', // 管理者
+      { // 管理者用
+        path: '/admin/administrator/approval',
         component: () => import('@/views/admin/administrator/Approval.vue'),
         meta: { title: 'APPROVAL'}
       },
@@ -140,47 +148,20 @@ const router = createRouter({
 
 
 // beforeEach ガードで認証状態を確認し、アクセス権を制御する
-router.beforeEach(async (to, from, next) => {
-  const user = await getCurrentUser(); // ログイン中のユーザーを取得
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth); // メタ情報から認証が必要かを取得
+router.beforeEach((to, from, next) => {
 
-  if (requiresAuth && !user) {
-    // 認証が必要なページに未ログインの場合、ログインページにリダイレクト
-    next('/login');
-  } else if (requiresAuth) {
-    try {
-      // ログイン済みのユーザーのFirestoreから権限情報を取得
-      const userData = await getOneLevelData(user.uid, 'members');
-      const userRole = userData.role;
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    const user = auth.currentUser;
 
-      if (to.path.startsWith('/admin/administrator/') && userRole !== '管理者') {
-        // 管理者向けのページにアクセス権がない場合、リダイレクトまたはエラーメッセージを表示
-        next('/admin');
-      } else if (userRole === '組合員') {
-        // 組合員向けのページ制御
-        const restrictedPages = ['/admin/portfolio-list', '/admin/portfolio', '/admin/post'];
-        if (restrictedPages.includes(to.path)) {
-          // 組合員に制限されたページにアクセス権がない場合、リダイレクトまたはエラーメッセージを表示
-          next('/admin');
-        } else {
-          // ページへのアクセスを許可
-          next();
-        }
-      } else {
-        // ページへのアクセスを許可
-        next();
-      }
-    } catch (error) {
-      console.error('ユーザー情報の取得エラー', error);
-      // エラーが発生した場合、リダイレクトまたはエラーメッセージを表示
-      next('/error');
+    if (user) { // セッションを見に行く
+      next(); // 認証済みなら遷移を続行
+    } else {
+      next('/login'); // 認証していなければログインページにリダイレクト
     }
   } else {
-    // ページへのアクセスを許可
-    next();
+    next(); // その他のページは遷移を許可
   }
 });
-
 
 
 // afterEach フックでタイトルを設定

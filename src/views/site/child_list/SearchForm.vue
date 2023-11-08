@@ -71,7 +71,7 @@ const formData = ref({
 import { specialties } from '@/utils/category'; // 専門カテゴリ
 import { states } from '@/utils/states'; // 都道府県
 
-// 子→親へ
+// 子から親へ
 const emit = defineEmits([
   'searched',
   'reset'

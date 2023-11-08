@@ -66,7 +66,7 @@ const targetFile = ref([]);
 const dragover = ref(false);
 const errorMessage = ref('');
 
-// 子→親へ
+// 子から親へ
 const emit = defineEmits([
   'update:filesUploaded', // ファイル情報
   'update:errorMessage' // エラーメッセージ
@@ -81,7 +81,7 @@ const handleFileInput = (e) => {
   targetFile.value = e.target.files;
   if (e.target.files.length > 1) {
     errorMessage.value = "一度にアップロードできるファイルは 1 つだけです。";
-    emit('update:errorMessage', errorMessage.value); // 子→親へ
+    emit('update:errorMessage', errorMessage.value);
   }
   console.log(e.target.files.length); // 1
   errorMessage.value = '';
@@ -99,7 +99,7 @@ const addFiles = (files) => {
 
   } else {
     errorMessage.value = "アップロードするファイルがありません。";
-    emit('update:errorMessage', errorMessage.value); // 子→親へ
+    emit('update:errorMessage', errorMessage.value);
   }
 }
 
@@ -111,7 +111,7 @@ const dropFile = (e) => {
 
   if (e.dataTransfer.files.length > 1) {
     errorMessage.value = "一度にアップロードできるファイルは 1 つだけです。";
-    emit('update:errorMessage', errorMessage.value); // 子→親へ
+    emit('update:errorMessage', errorMessage.value);
   } else {
     errorMessage.value = '';
     const uploadedFile = e.dataTransfer.files[0];

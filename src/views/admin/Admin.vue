@@ -1,5 +1,6 @@
 <template>
-  <v-container class="fill-height" fluid>
+  <!-- <v-container class="fill-height" fluid> --><!-- 真ん中中央ぞろえ -->
+  <v-container>
     <v-row>
       <v-col cols="6" md="2" v-for="menu in navMenus">
         <HoverIconCard
@@ -9,11 +10,11 @@
         ></HoverIconCard>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row v-if="userData.role === '管理者'">
       <v-col cols="12" md="12">
         <v-data-table
           :headers="headers"
-          :items="items"
+          :items="logs"
           class="px-6 py-4 rounded no-header"
           :height="200"
         >
@@ -21,6 +22,19 @@
             <v-toolbar flat color="white">
               <v-toolbar-title>LOG</v-toolbar-title>
             </v-toolbar>
+          </template>
+          <template v-slot:item.memberID="{ item }">
+            <v-btn
+              :href="item.raw.memberID"
+              variant="text"
+            >MEMBER</v-btn>
+          </template>
+          <template v-slot:item.portfolioID="{ item }">
+            <v-btn
+              :href="item.raw.portfolioID"
+              variant="text"
+              color="primary"
+            >ACTION</v-btn>
           </template>
         </v-data-table>
       </v-col>
@@ -30,15 +44,21 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+// 初期値
 const navMenus = ref([]);
 const user = ref('');
+const userData = ref({});
+const logs = ref([]);
 
 // component
 import HoverIconCard  from '@/components/cards/HoverIconCard.vue';
 
 // firebase
 import { getCurrentUser } from '@/firebase/auth';
-import { getOneLevelData } from '@/firebase/firestore';
+import { getOneLevelData, getOneLevelAllData } from '@/firebase/firestore';
+
+// utils
+import { formatDate } from '@/utils/formatDate'; // 日付形式変換
 
 // menu
 import { getMenu } from '@/router/menu';
@@ -46,17 +66,29 @@ import { getMenu } from '@/router/menu';
 // メニュー取得
 onMounted(async () => {
   try {
-    user.value = await getCurrentUser(); // user情報
-    const userDoc = await getOneLevelData(user.value.uid, "members");
-    const menu = getMenu(user.value, userDoc.role);
+    user.value = await getCurrentUser(); // auth情報
+    userData.value = await getOneLevelData(user.value.uid, "members"); // db内のuser情報
+    navMenus.value = getMenu(user.value, userData.value.role);
 
-    navMenus.value = menu;
+    const allDoc = await getOneLevelAllData("logs");
+    // プロミスの配列を作成
+    const promises = allDoc.map(async (doc) => {
+      const formattedDate = await formatDate(doc.date);
+      return {
+        log: doc.log,
+        memberID: `/admin/profile/${doc.memberID}`,
+        portfolioID: `/admin/portfolio/${doc.portfolioID}`,
+        date: formattedDate,
+      };
+    });
+
+    // 全てのプロミスを非同期で実行
+    logs.value = await Promise.all(promises);
 
   } catch (error) {
     console.error('ユーザーデータ取得エラー', error);
   }
 });
-
 
 const headers = ref([
   {
@@ -65,35 +97,31 @@ const headers = ref([
     sortable: false,
     key: 'date',
   },
-  { title: 'COMMENT', key: 'comment' },
+  { title: 'LOG', key: 'log' },
+  { title: 'MEMBER', key: 'memberID' },
+  { title: 'ACTION', key: 'portfolioID' },
 ]);
 
-const items = ref([
-  {
-    date: '2023/10/07',
-    comment: 'データをインポートしました。',
-  },
-  {
-    date: '2023/10/06',
-    comment: 'ポートフォリオが申請されました。',
-  },
-  {
-    date: '2023/10/07',
-    comment: 'データをエクスポートしました。',
-  },
-  {
-    date: '2023/10/07',
-    comment: 'データをインポートしました。',
-  },
-  {
-    date: '2023/10/06',
-    comment: 'ポートフォリオが申請されました。',
-  },
-  {
-    date: '2023/10/07',
-    comment: 'データをエクスポートしました。',
-  },
-]);
+// テスト
+// const headers = ref([
+//   {
+//     title: 'DATE',
+//     align: 'start',
+//     sortable: false,
+//     key: 'date',
+//   },
+//   { title: 'COMMENT', key: 'comment' },
+// ]);
+// const items = ref([
+//   {
+//     date: '2023/10/07',
+//     comment: 'データをインポートしました。',
+//   },
+//   {
+//     date: '2023/10/06',
+//     comment: 'ポートフォリオが申請されました。',
+//   },
+// ]);
 
 </script>
 

@@ -1,16 +1,20 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router/router';
+import { createApp } from 'vue';
+import App from '@/App.vue';
+import router from '@/router/router';
+import { registerPlugins } from '@/plugins';
+import { validationSchema } from '@/validate/validate';
+import JsonCSV from 'vue-json-csv';
+
 // import { createPinia } from 'pinia';
-import { registerPlugins } from '@/plugins'
-import { validationSchema } from './validate/validate';
+// const pinia = createPinia();
 
 const app = createApp(App)
-// const pinia = createPinia();
 
 app.config.globalProperties.validationSchema = validationSchema;
 
 // app.use(pinia)
-app.use(router)
+app.use(router);
+app.component('downloadCsv', JsonCSV)
+
 registerPlugins(app)
 app.mount('#app')

@@ -7,16 +7,15 @@ import {
   getDoc, // 取得
   getDocs, // 全て取得
   updateDoc, // 更新
+  writeBatch, // バッチ処理(複数の書き込み)
   // arrayUnion // 配列内の一意の値を追加
 } from "firebase/firestore";
+import { array } from 'yup';
 
-
-
-// ここから下はOK---------------------------------------------------
-// 更新 - 1階層
-export async function updateOneLevelData(userId, collectionName,arrayData) {
+// 更新 - 特定 - 1階層
+export async function updateOneLevelData(userID, collectionName, arrayData) {
   try {
-    const docRef = doc(db, collectionName, userId);
+    const docRef = doc(db, collectionName, userID);
 
     await updateDoc(docRef, arrayData);
   } catch (error) {
@@ -39,6 +38,23 @@ export async function setOneLevelData(userID, collectionName, arrayData) {
   }
 }
 
+// 上書き - 特定 - 複数 - 1階層
+export async function updateOneLevelMultipleData(collectionName, multipleArrayData) {
+  try {
+    const batch = writeBatch(db);
+
+    multipleArrayData.forEach((userData) => {
+      const docRef = doc(db, collectionName, userData.memberID);
+      batch.set(docRef, userData, {merge: true});
+    });
+
+    await batch.commit();
+  } catch (error) {
+    console.error("更新エラーby Firestore:", error);
+    throw error;
+  }
+}
+
 // 追加 - 特定 - 1階層
 export async function addOneLevelData(collectionName, arrayData) {
   try {
@@ -57,7 +73,11 @@ export async function addTwoLevelData(userID, arrayData, firstCollectionName, se
     const docRef = doc(db, firstCollectionName, userID);
     const collectionRef = collection(docRef, secondCollectionName);
 
-    await addDoc(collectionRef, arrayData);
+    // await addDoc(collectionRef, arrayData);
+    // 2階層目のドキュメントIDを返す
+    const secondDocRef = await addDoc(collectionRef, arrayData);
+
+    return secondDocRef.id;
 
   } catch (error) {
     console.error("保存エラーby Firestore:", error);
@@ -66,9 +86,9 @@ export async function addTwoLevelData(userID, arrayData, firstCollectionName, se
 }
 
 // 取得 - 特定 - 1階層
-export async function getOneLevelData(userId, collectionName) {
+export async function getOneLevelData(userID, collectionName) {
   try {
-    const docRef = doc(db, collectionName, userId);
+    const docRef = doc(db, collectionName, userID);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
@@ -83,9 +103,9 @@ export async function getOneLevelData(userId, collectionName) {
 }
 
 // 取得 - 特定 - 2階層
-export async function getTwoLevelData(userId, docID, firstCollectionName, secondCollectionName) {
+export async function getTwoLevelData(userID, docID, firstCollectionName, secondCollectionName) {
   try {
-    const firstDocRef = doc(db, firstCollectionName, userId);
+    const firstDocRef = doc(db, firstCollectionName, userID);
     const collectionRef = collection(firstDocRef, secondCollectionName);
 
     const secondDocRef = doc(collectionRef, docID);
@@ -121,9 +141,9 @@ export async function getOneLevelAllData(collectionName) {
 }
 
 // 取得 - 全 - 2階層(コレクション名-ドキュメント名-コレクション名-ドキュメント名-フィールド)
-export async function getTwoLevelAllData(userId, firstCollectionName, secondCollectionName) {
+export async function getTwoLevelAllData(userID, firstCollectionName, secondCollectionName) {
   try {
-    const docRef = doc(db, firstCollectionName, userId);
+    const docRef = doc(db, firstCollectionName, userID);
     const collectionRef = collection(docRef, secondCollectionName);
 
     const querySnapshot = await getDocs(collectionRef);

@@ -93,13 +93,13 @@ const readData = ref({
   state: '',
   eightArea: '',
   role: '',
-  joinData: ''
+  joinDate: ''
 });
 const labels = {
   state: '都道府県',
   eightArea: '八区分',
   role: '権限',
-  joinData: '加入年月日'
+  joinDate: '加入年月日'
 };
 
 // validation
@@ -128,7 +128,7 @@ onMounted(async () => {
     user.value = await getCurrentUser();
     // console.log(user.value.uid);
     const userDoc = await getOneLevelData(user.value.uid, "members");
-    const formattedDate = await formatDate(userDoc.joinData);
+    const formattedDate = await formatDate(userDoc.joinDate);
 
     // Firestoreから取得したデータを各フィールドに設定
     fields.forEach((fieldInfo) => {
@@ -140,7 +140,7 @@ onMounted(async () => {
     readData.value.state = userDoc.state;
     readData.value.eightArea = userDoc.eightArea;
     readData.value.role = userDoc.role;
-    readData.value.joinData = formattedDate;
+    readData.value.joinDate = formattedDate;
 
   } catch (error) {
     errorMessage.value = error;

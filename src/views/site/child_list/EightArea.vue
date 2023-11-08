@@ -43,7 +43,7 @@ const getDynamicClass = (index) => {
   return numberClass;
 };
 
-// 子→親へ
+// 子から親へ
 const emit = defineEmits([
   'selected',
   'reset'

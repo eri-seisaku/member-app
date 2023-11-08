@@ -38,7 +38,7 @@ const props = defineProps({
 
 console.log(props.authVal);
 
-// 子→親へ
+// 子から親へ
 const emit = defineEmits([
   'update:profileIconUrl'
 ]);
@@ -69,7 +69,7 @@ const handleFilesUploaded = async (files) => {
     // firestore更新
     await updateOneLevelData(props.authVal.uid, "members", userData);
 
-    emit('update:profileIconUrl', url); // 子→親へ
+    emit('update:profileIconUrl', url);
 
     errorMessage.value = '';
     message.value = 'ユーザー情報の更新に成功しました。';

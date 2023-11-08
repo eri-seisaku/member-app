@@ -272,7 +272,7 @@ const submit = handleSubmit(async (values) => {
 
         // DBに保存するデータ
         const userData = {
-          memberId: user.uid,
+          memberID: user.uid,
           name: values.name,
           officeName: values.officeName,
           phone: values.phone,
@@ -283,7 +283,7 @@ const submit = handleSubmit(async (values) => {
           eightArea: area,
           specialty: values.specialty,
           role: role.member,
-          joinData: new Date(),
+          joinDate: new Date(),
         };
 
         await setOneLevelData(user.uid, "members", userData);

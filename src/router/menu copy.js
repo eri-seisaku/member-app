@@ -14,45 +14,12 @@ export const getMenu = (user, userRole) => {
       {
         icon: 'mdi-file-account',
         title: 'USER LIST',
-        to: '/admin/administrator/member-list'
+        to: '/admin/administrator/list'
       },
       {
         icon: 'mdi-check-decagram-outline',
         title: 'APPROVAL',
         to: '/admin/administrator/approval'
-      },
-      {
-        to: '',
-        icon: 'mdi-plus-box-outline',
-        title: 'EMPTY'
-      },
-      {
-        to: '',
-        icon: 'mdi-plus-box-outline',
-        title: 'EMPTY'
-      },
-    ];
-  } else if (userRole === '正会員') {
-    return [ // 正会員ナビメニュー
-      {
-        icon: 'mdi-view-dashboard',
-        title: 'DASHBOARD',
-        to: "/admin"
-      },
-      {
-        icon: 'mdi-account-cog',
-        title: 'PROFILE',
-        to: `/admin/profile/${user.uid}`
-      },
-      {
-        icon: 'mdi-file-account',
-        title: 'PORTFOLIO',
-        to: '/admin/portfolio-list'
-      },
-      {
-        to: '',
-        icon: 'mdi-plus-box-outline',
-        title: 'EMPTY'
       },
       {
         to: '',
@@ -78,9 +45,9 @@ export const getMenu = (user, userRole) => {
         to: `/admin/profile/${user.uid}`
       },
       {
-        to: '',
-        icon: 'mdi-plus-box-outline',
-        title: 'EMPTY'
+        icon: 'mdi-file-account',
+        title: 'PORTFOLIO',
+        to: '/admin/list'
       },
       {
         to: '',

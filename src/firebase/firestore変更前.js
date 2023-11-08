@@ -50,9 +50,9 @@ export async function addArticle(userID, articleData) {
 }
 
 // ユーザーの特定の記事を取得
-export async function getArticle(userId, postID) {
+export async function getArticle(userID, postID) {
   try {
-    const userDocRef = doc(db, "articles", userId); // ユーザーのドキュメントへの参照を取得
+    const userDocRef = doc(db, "articles", userID); // ユーザーのドキュメントへの参照を取得
     const postCollectionRef = collection(userDocRef, "posts"); // "posts" サブコレクションへの参照を取得
 
     const postDocRef = doc(postCollectionRef, postID); // 記事のドキュメントへの参照を取得
@@ -70,9 +70,9 @@ export async function getArticle(userId, postID) {
 }
 
 // ユーザーの全ての記事を取得
-export async function getAllArticles(userId) {
+export async function getAllArticles(userID) {
   try {
-    const userDocRef = doc(db, "articles", userId); // ユーザーのドキュメントへの参照を取得
+    const userDocRef = doc(db, "articles", userID); // ユーザーのドキュメントへの参照を取得
     const postCollectionRef = collection(userDocRef, "posts"); // "posts" サブコレクションへの参照を取得
 
     const querySnapshot = await getDocs(postCollectionRef);
@@ -107,9 +107,9 @@ export async function getOneLevelAllData(collectionName) {
 }
 
 // 2階層の全データ取得(コレクション名-ドキュメント名-コレクション名-ドキュメント名-フィールド)
-export async function getTwoLevelAllData(userId, firstCollectionName, secondCollectionName) {
+export async function getTwoLevelAllData(userID, firstCollectionName, secondCollectionName) {
   try {
-    const userDocRef = doc(db, firstCollectionName, userId);
+    const userDocRef = doc(db, firstCollectionName, userID);
     const postCollectionRef = collection(userDocRef, secondCollectionName);
 
     const querySnapshot = await getDocs(postCollectionRef);
@@ -130,9 +130,9 @@ export async function getTwoLevelAllData(userId, firstCollectionName, secondColl
 
 // ここまで --------------------------------------
 // 取得 - プロフィール
-export async function getData(userId, fieldName) {
+export async function getData(userID, fieldName) {
   try {
-    const userRef = doc(db, fieldName, userId);
+    const userRef = doc(db, fieldName, userID);
     const userDoc = await getDoc(userRef);
     if (userDoc.exists()) {
       return userDoc.data();
@@ -146,9 +146,9 @@ export async function getData(userId, fieldName) {
 }
 
 // 更新
-export async function updateData(userId, fieldName, updatedData) {
+export async function updateData(userID, fieldName, updatedData) {
   try {
-    const userDocRef = doc(db, fieldName, userId);
+    const userDocRef = doc(db, fieldName, userID);
     await updateDoc(userDocRef, updatedData);
   } catch (error) {
     console.error("ユーザーデータの更新エラーby Firestore:", error);

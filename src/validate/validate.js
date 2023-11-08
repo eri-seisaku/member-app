@@ -26,7 +26,8 @@ export const validationSchema = object({
   // email: string().email().required(),
   ...commonSchema,
   email: string().email().required(),
-  zipCode: string().length(7, '郵便番号はハイフンなしの7桁で入力する必要があります').required(),
+  // zipCode: string().length(7, '郵便番号はハイフンなしの7桁で入力する必要があります。').required(),
+  zipCode: string().matches(/^\d{7}$/, '郵便番号はハイフンなしの7桁で入力する必要があります。').required(),
   state: string().required(),
   address: string().required(),
   phone: string()

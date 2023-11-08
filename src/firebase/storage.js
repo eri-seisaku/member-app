@@ -7,10 +7,10 @@ import {
 } from "firebase/storage";
 
 
-export async function upload(directoryName, fileData, userId) {
+export async function upload(directoryName, fileData, userID) {
   try {
     // ファイルを保存するパス
-    const filePath = `${directoryName}/${userId}/${fileData.name}`;
+    const filePath = `${directoryName}/${userID}/${fileData.name}`;
 
     const storageRef = ref(storage, filePath); // Storageの参照を作成
 
@@ -49,7 +49,7 @@ export async function createFirebase(title, fileData) {
 }
 // // カスタムファイル名を生成
 // const timestamp = new Date().getTime();
-// const customFileName = `portfolio_${userId}_${articleId}_${timestamp}.jpg`;
+// const customFileName = `portfolio_${userID}_${articleID}_${timestamp}.jpg`;
 
 // // ファイルを保存するパス
 // const filePath = `images/portfolio/${customFileName}`;

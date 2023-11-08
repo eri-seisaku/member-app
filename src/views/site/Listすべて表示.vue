@@ -5,12 +5,10 @@
     <v-col cols="12" md="12">
       <v-data-table
         v-model:items-per-page="itemsPerPage"
-        v-model:expanded="expanded"
         :headers="headers"
         :items="filteredMembers"
         :loading="loadingMembers"
         :search="search"
-        show-expand
       >
         <template v-slot:top>
           <v-row class="my-8">
@@ -28,16 +26,14 @@
             </v-col>
           </v-row>
         </template>
-        <template v-slot:expanded-row="{ columns, item }">
-          <tr>
-            <td class="bg-grey-lighten-5" :colspan="columns.length">
-              <!-- <pre>{{ item.raw.url }}</pre> -->
-              <a :href="item.raw.url" class="text-decoration-underline">
-                <v-icon> mdi-account-edit </v-icon>
-                Portfolio
-              </a>
-            </td>
-          </tr>
+        <template v-slot:item.url="{ item }">
+          <a :href="item.columns.url" class="text-anchor">
+            <v-icon> mdi-account-edit </v-icon>
+            Portfolio
+          </a>
+
+          <!-- {{ item }} -->
+          <!-- {{ item.columns.url }} -->
         </template>
       </v-data-table>
     </v-col>
@@ -49,7 +45,6 @@ import { ref, onMounted } from 'vue';
 // 初期値
 const initialMembers = ref([]); // 初期データを保持するプロパティ
 const filteredMembers = ref([]); // フィルタリングされたデータを保持するプロパティ
-const expanded = ref([]);
 const search = ref(''); // 八区分エリア用
 const searchData = ref({
     keyword: '',
@@ -70,7 +65,7 @@ const headers = [
   { title: '都道府県', align: 'start', key: 'state' },
   { title: '入会年月日', align: 'start', key: 'joinDate' },
   { title: '専門デザイン分野', align: 'start', key: 'specialty' },
-  // { title: 'URL', align: 'start', key: 'url' },
+  { title: 'URL', align: 'start', key: 'url' },
 ];
 
 // components
@@ -168,8 +163,3 @@ const filterMembers = () => {
 }
 
 </script>
-<style>
-.v-data-table tr:hover td {
-    background-color: #eee!important;
-}
-</style>

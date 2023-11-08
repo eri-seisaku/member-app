@@ -68,7 +68,7 @@ import { validationSchema } from '@/validate/validate';
 // component
 import Avatar from '@/components/Avatar.vue';
 
-// 子→親へ
+// 子から親へ
 const emit = defineEmits([
   'update:filesUploaded', // ファイル情報
   'update:errorMessage' // エラーメッセージ
@@ -94,7 +94,7 @@ const dropFile = (e) => {
 const addFiles = (files) => {
   if (files.length > 1) {
     errorMessage.value = "一度にアップロードできるファイルは 1 つだけです。";
-    emit('update:errorMessage', errorMessage.value); // 子→親へ
+    emit('update:errorMessage', errorMessage.value);
 
   } else {
     errorMessage.value = "";
@@ -115,7 +115,7 @@ const validateImage = (file) => {
   } catch (error) {
     // バリデーションエラー時
     errorMessage.value = error.message;
-    emit('update:errorMessage', errorMessage.value); // 子→親へ
+    emit('update:errorMessage', errorMessage.value);
   }
 };
 
@@ -129,10 +129,10 @@ const submit = () => {
   if (files.value.length > 0) {
     // console.log(files.value);
     errorMessage.value = '';
-    emit('update:filesUploaded', files.value); // 子→親へ
+    emit('update:filesUploaded', files.value);
   } else {
     errorMessage.value = "アップロードするファイルがありません。";
-    emit('update:errorMessage', errorMessage.value); // 子→親へ
+    emit('update:errorMessage', errorMessage.value);
   }
 }
 </script>

@@ -44,12 +44,13 @@
   </v-container>
 </template>
 <script setup>
-// 初期値
 import { ref, onMounted } from "vue";
+// 初期値
 const title = ref('');
 const website = ref('');
 const fileData = ref('');
 const comment = ref('');
+
 const message = ref('');
 const errorMessage = ref('');
 
@@ -60,16 +61,16 @@ const uploadFile = (e) => {
 };
 
 // firebase
-import { createFirebase, upload } from '@/firebase/storage';
+import { upload } from '@/firebase/storage';
 import { getCurrentUser } from '@/firebase/auth';
-import { updateOneLevelData, addTwoLevelData } from '@/firebase/firestore';
+import { addOneLevelData, addTwoLevelData } from '@/firebase/firestore';
 
 // 取得
 onMounted(async () => {
   try {
     user.value = await getCurrentUser();
   } catch (error) {
-    console.error('ユーザーデータ取得エラー', error);
+    console.error('データ取得エラー', error);
     errorMessage.value = error;
   }
 });
@@ -92,13 +93,22 @@ const submit = async () => {
       date: new Date(),
     }
 
-    await addTwoLevelData(user.value.uid, postData, "portfolios", "portfolio");
+    const secondDocID = await addTwoLevelData(user.value.uid, postData, "portfolios", "portfolio");
 
-    message.value = 'ユーザー情報の更新に成功しました。';
+    const log = {
+      date: new Date(),
+      log: 'ポートフォリオが申請されました。',
+      memberID: user.value.uid,
+      portfolioID: secondDocID
+    }
+
+    await addOneLevelData("logs", log);
+
+    message.value = 'ポートフォリオの申請に成功しました。';
 
   } catch (error) {
-    console.error('ユーザーデータ更新エラー', error);
-    errorMessage.value = 'ユーザー情報の更新に失敗しました。';
+    console.error(error);
+    errorMessage.value = 'ポートフォリオの申請に失敗しました。';
   }
 };
 

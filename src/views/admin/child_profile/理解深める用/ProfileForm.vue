@@ -126,7 +126,7 @@ const readData = [
   { key: 'state', label: '都道府県', value: ref('')},
   { key: 'eightArea', label: '八区分', value: ref('')},
   { key: 'role', label: '権限', value: ref('')},
-  { key: 'joinData', label: '加入年月日', value: ref('')},
+  { key: 'joinDate', label: '加入年月日', value: ref('')},
 ];
 // 編集専用
 const editData = [
@@ -149,7 +149,7 @@ onMounted(async () => {
   try {
     user.value = await getCurrentUser(); // user情報
     const userDoc = await getOneLevelData(user.value.uid, "members"); // 全データ
-    const formattedDate = await formatDate(userDoc.joinData); // 日付変換
+    const formattedDate = await formatDate(userDoc.joinDate); // 日付変換
 
     // dbから取得したデータを各フィールドに設定
     editData.forEach((editInfo) => {
@@ -158,7 +158,7 @@ onMounted(async () => {
     });
 
     readData.forEach((readInfo) => {
-      if (readInfo.key === 'joinData') {
+      if (readInfo.key === 'joinDate') {
         readInfo.value.value = formattedDate;
       } else {
         readInfo.value.value = userDoc[readInfo.key];
