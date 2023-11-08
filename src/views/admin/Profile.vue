@@ -22,7 +22,7 @@
           <ImageDialog
             v-model:dialog="imageDialog"
             @update:profileIconUrl="handleChangeProfileIcon"
-            :authVal="authData"
+            :authData="user"
           />
         </v-sheet>
       </v-col>
@@ -40,13 +40,6 @@
                 variant="outlined"
                 form="profileForm"
               ></v-text-field>
-              <!-- <Text
-                :label="editInfo.label"
-                form="profileForm"
-                type="text"
-                :required="true"
-                v-model:inputValue="editInfo.value.value.value"
-              /> -->
             </v-col>
             <v-col cols="12" md="6" v-for="readInfo in readData">
               <label class="text-subtitle-1 text-medium-emphasis">
@@ -58,13 +51,6 @@
                 variant="outlined"
                 :disabled="true"
               ></v-text-field>
-              <!-- <Text
-                :label="readInfo.label"
-                type="text"
-                :disabled="true"
-                :required="true"
-                v-model:inputValue="readInfo.value.value"
-              /> -->
             </v-col>
             <v-col cols="12" md="6">
               <div class="text-subtitle-1 text-medium-emphasis">
@@ -121,7 +107,7 @@
           />
           <MailDialog
             v-model:dialog="mailDialog"
-            :authVal="authData"
+            :authData="user"
           />
         </v-sheet>
       </v-col>
@@ -130,20 +116,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
-
-// 初期値
+import { ref, onMounted } from 'vue';
 const passwordDialog = ref(false);
 const mailDialog = ref(false);
 const imageDialog = ref(false);
 
+const user = ref({});
 const imageSrc = ref('');
 
 const message = ref('');
 const errorMessage = ref('');
-
-const user = ref('');
-const authData = ref({});
 
 // validation
 import { useField, useForm } from 'vee-validate';
@@ -188,7 +170,6 @@ import { formatDate } from '@/utils/formatDate';
 onMounted(async () => {
   try {
     user.value = await getCurrentUser(); // user情報
-    authData.value = user.value;
 
     const userDoc = await getOneLevelData(user.value.uid, "members"); // 全データ
     const formattedDate = await formatDate(userDoc.joinDate); // 日付変換
@@ -232,13 +213,5 @@ const handleChangeProfileIcon = async (filePath) => {
   // console.log(filePath);
   imageSrc.value = filePath;
 }
-
-
-// watch(filePath, (newValue, oldValue) => {
-//   // imageUrlが変更されたときの処理をここに書く
-//     console.log('画像が変更されました:', newValue);
-//     // imageSrc.value = newValue;
-//   });
-
 </script>
 

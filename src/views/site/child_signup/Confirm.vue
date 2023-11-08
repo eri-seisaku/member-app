@@ -17,10 +17,12 @@
 
 <script setup>
 import { computed } from 'vue';
+
 const props = defineProps({
-  value: Object, // データはオブジェクトとして受け取る
+  value: Object,
 });
-console.log(props.value);
+
+// console.log(props.value); // 親から渡された値確認用
 
 const transformedData = computed(() => {
   const data = props.value;
@@ -40,7 +42,6 @@ const transformedData = computed(() => {
 
   return transformed;
 });
-
 
 </script>
 

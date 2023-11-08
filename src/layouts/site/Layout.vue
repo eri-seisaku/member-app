@@ -6,7 +6,7 @@
         class="d-block d-md-none"
       />
 
-      <v-app-bar-title style="cursor: pointer" @click="$router.push('/')">LOGO</v-app-bar-title>
+      <v-app-bar-title style="cursor: pointer" @click="$router.push({ name: 'Home' })">LOGO</v-app-bar-title>
 
         <v-tabs
           class="d-none d-md-block"
@@ -50,9 +50,6 @@
     <v-main class="bg-grey-lighten-3">
       <v-container>
         <v-row>
-          <!-- <v-col cols="12" md="12">
-            header
-          </v-col> -->
           <v-col cols="12" md="10">
             <v-sheet
               min-height="70vh"
@@ -91,6 +88,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
 const drawer = ref(false)
+
 onMounted(() => {
   const resizeHandler = (e) => {
     if (!(e instanceof UIEvent)) {

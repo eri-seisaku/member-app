@@ -42,7 +42,7 @@ export const validationSchema = object({
     .min(8, 'パスワードは少なくとも8文字以上である必要があります')
     .max(64, 'パスワードは64文字以下である必要があります')
     .required(),
-  specialty: string().required('選択してください。'), // selectから変更
+  specialty: string().required('選択してください。'),
   checkbox: string().oneOf(['1'], 'チェックする必要があります。').required(),
   image: mixed()
     .test('fileType', 'PNGまたはJPG形式の画像をアップロードしてください', (value) => {
@@ -54,7 +54,7 @@ export const validationSchema = object({
   website: string().url('有効なURLを入力してください。').nullable(),
 });
 
-// profile用
+// profile PasswordDialog用
 export const passwordSchema = object({
   currentPassword: string().required(),
   newPassword: string()
@@ -68,7 +68,7 @@ export const passwordSchema = object({
     confirmPassword: string().required(),
 });
 
-// profile用
+// profile MailDialog用
 export const authSchema = object({
   email: string().email().required(),
   password: string().required(),

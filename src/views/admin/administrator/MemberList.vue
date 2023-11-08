@@ -29,7 +29,6 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-// 初期値
 const initialMembers = ref([]);
 const filteredMembers = ref([]);
 const expanded = ref([]);
@@ -50,7 +49,6 @@ const headers = [
   { title: '専門デザイン分野', align: 'start', key: 'specialty' },
   // { title: 'URL', align: 'start', key: 'url' },
 ];
-
 
 // firebase
 import { getOneLevelAllData } from '@/firebase/firestore';

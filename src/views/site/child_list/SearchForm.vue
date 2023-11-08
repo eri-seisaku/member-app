@@ -57,7 +57,6 @@
   </v-sheet>
 </template>
 <script setup>
-// 初期値
 import { ref } from 'vue';
 
 const formData = ref({

@@ -32,7 +32,7 @@ const areas = [
 const getDynamicClass = (index) => {
   const numberClass = {
     area: true,
-    // white: true, // trueにするとクラスが全番号に付与
+    // white: true, // trueにするとwhiteクラスが全番号に付与
     // opacity: true
   };
   const area = areas.find(area => area.numbers.includes(index));
@@ -64,10 +64,10 @@ const getNumber = (index) => {
 
 </script>
 <style>
-a {
-  text-decoration: none;
-  color: black;
+.opacity {
+  opacity: 0.6;
 }
+/* セルの高さ */
 .area {
   height: 2em;
 }
@@ -110,8 +110,5 @@ a {
   background: #c7adf7;
   border-style: none;
   cursor: pointer;
-}
-.opacity {
-  opacity: 0.6;
 }
 </style>

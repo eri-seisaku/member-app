@@ -16,7 +16,7 @@
             旧メールアドレス
           </label>
           <v-text-field
-            :model-value="authVal.email"
+            :model-value="authData.email"
             density="compact"
             variant="outlined"
             disabled
@@ -61,9 +61,8 @@
 
 <script setup>
 import { ref } from 'vue';
-// 初期値設定
 const dialog = ref(false);
-const visible = ref(false); // password表示非表示
+const visible = ref(false);
 const changeMailMode = ref(true);
 
 const message = ref('');
@@ -71,10 +70,10 @@ const errorMessage = ref('');
 
 // 親から子へ
 const props = defineProps({
-  authVal: Object
+  authData: Object
 });
 
-console.log(props.authVal);
+// console.log(props.authData);
 
 // validation
 import { useField, useForm } from 'vee-validate';
@@ -83,7 +82,6 @@ import { authSchema } from '@/validate/validate';
 const { handleSubmit } = useForm({
   validationSchema: authSchema,
 });
-// console.log(props.authVal);console.log(props.submitVal);
 
 const email = useField('email');
 const password = useField('password');
@@ -98,7 +96,7 @@ import { updateOneLevelData } from '@/firebase/firestore';
 
 const submit = handleSubmit(async (values) => {
   try {
-    // console.log(values.email, props.authVal.uid);
+    // console.log(values.email, props.authData.uid);
 
     // authentication更新
     await updateEmailByAuth(values.password, values.email);
@@ -111,7 +109,7 @@ const submit = handleSubmit(async (values) => {
     // console.log(userData);
 
     // firestore更新
-    await updateOneLevelData(props.authVal.uid, "members", userData);
+    await updateOneLevelData(props.authData.uid, "members", userData);
 
     changeMailMode.value = false;
 

@@ -4,7 +4,6 @@ import {
   START_LOCATION // 遷移を判定するため
 } from 'vue-router'
 
-import { auth } from '@/firebase/firebase';
 import { getCurrentUser } from '@/firebase/auth';
 import { getOneLevelData } from '@/firebase/firestore';
 
@@ -100,12 +99,17 @@ const adminRoutes = [
       {
         path: '/admin/administrator/member-list', // 管理者
         component: () => import('@/views/admin/administrator/MemberList.vue'),
-        meta: { title: 'LIST'}
+        meta: { title: 'MEMBER LIST'}
       },
       {
         path: '/admin/administrator/approval', // 管理者
         component: () => import('@/views/admin/administrator/Approval.vue'),
         meta: { title: 'APPROVAL'}
+      },
+      {
+        path: '/admin/test', // テスト用
+        component: () => import('@/views/admin/Test.vue'),
+        meta: { title: 'TEST'}
       },
     ],
   },
@@ -124,7 +128,7 @@ const loginRoutes = [
         meta: { title: 'LOGIN'}
       },
       {
-        path: '/password_request',
+        path: '/password-request',
         name: 'Reissue',
         component: () => import('@/views/login/Reissue.vue'),
         meta: { title: 'Reissue'}

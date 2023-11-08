@@ -4,7 +4,6 @@
       v-model="drawer"
       :color="color"
     >
-      <!-- LOGO -->
       <v-sheet
         :color="color"
         class="pa-4"
@@ -19,7 +18,6 @@
 
       <v-divider></v-divider>
 
-      <!-- USER -->
       <v-sheet
         :color="color"
         class="pa-4 text-center"
@@ -52,7 +50,6 @@
         ></v-list-item>
       </v-list>
 
-      <!-- LOG OUT BUTTON -->
       <template v-slot:append>
         <div class="pa-2">
           <v-btn
@@ -90,19 +87,18 @@
 </template>
 
 <script setup>
-// 初期値
 import { ref, computed, onMounted } from "vue";
 const drawer = ref(null);
 const color = ref('');
 const navMenus = ref([]);
-
-const user = ref(''); // authのデータ用
+const user = ref({}); // authのデータ用
 const userData = ref({}); // firestoreのデータ用
 
 // router
 import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
+
 // ページのタイトルを取得
 const title = computed(() => {
   return route.meta.title || 'Default Title';
@@ -119,18 +115,16 @@ import { getMenu } from '@/router/menu';
 onMounted(async () => {
   try {
     user.value = await getCurrentUser();
-    const userDoc = await getOneLevelData(user.value.uid, "members");
+    userData.value = await getOneLevelData(user.value.uid, "members");
 
-    userData.value = userDoc;
+    navMenus.value = getMenu(user.value, userData.value.role);
 
-    const menu = getMenu(user.value, userDoc.role);
-
-    if (userDoc.role === '管理者') {
+    if (userData.value.role === '管理者') {
       color.value = 'administrator';
     } else {
       color.value = 'member';
     }
-    navMenus.value = menu;
+
   } catch (error) {
     console.error('ユーザーデータ取得エラー', error);
   }
@@ -139,7 +133,8 @@ onMounted(async () => {
 // ログアウト処理
 const logoutUser = () => {
   logout();
-  router.push('/');
+  // router.push('/');
+  router.push({ name: 'Home' });
 }
 </script>
 

@@ -186,7 +186,6 @@
 </template>
 
 <script setup>
-// 初期値
 import { ref, watch } from 'vue';
 const inputValues = ref({});
 const message = ref(''); // 郵便番号検索時のメッセージ
@@ -194,7 +193,7 @@ const errorMessage = ref('');
 const confirmMode = ref(false); // 確認画面の切り替え
 const visible = ref(false); // password表示非表示
 
-// components
+// component
 import Confirm from '@/views/site/child_signup/Confirm.vue';
 
 // router
@@ -289,7 +288,7 @@ const submit = handleSubmit(async (values) => {
         await setOneLevelData(user.uid, "members", userData);
 
         // 登録が成功した場合
-        router.push('/admin');
+        router.push({ name: 'Admin' });
       }
     }
   } catch (error) {

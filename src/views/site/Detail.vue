@@ -46,7 +46,6 @@
 </template>
 
 <script setup>
-// 初期値
 import { ref, onMounted } from 'vue';
 const lists = ref([]);
 const readData = ref({});
@@ -55,7 +54,7 @@ const readData = ref({});
 import { useRoute } from "vue-router";
 const route = useRoute();
 
-console.log(route.params.userID); // userId取得
+// console.log(route.params.userID); // userId取得確認用
 
 // components
 import Accordion from '@/views/site/child_detail/Accordion.vue';
@@ -66,11 +65,7 @@ import { getOneLevelData } from '@/firebase/firestore';
 
 onMounted(async () => {
   try {
-    const userDoc = await getOneLevelData(route.params.userID, "members");
-
-    readData.value = userDoc;
-
-    console.log(readData.value);
+    readData.value = await getOneLevelData(route.params.userID, "members");
 
     lists.value = [
       {

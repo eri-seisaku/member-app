@@ -2,24 +2,20 @@
   <v-container class="fill-height" fluid>
     <v-row>
       <v-col>
-        <!-- LOGO ICON -->
         <v-img
           class="mx-auto my-6"
           max-width="228"
           src="@/assets/logo-vuetify.svg"
         ></v-img>
-        <!-- MESSAGE -->
         <Alert
           color="primary"
           :text="sendMailMode ? 'メールアドレスを入力してください。パスワードのリセット手順が記されたメールが送信されます。' : 'メールの確認リンクをクリックし、ログインページを訪問してください。'"
         />
-        <!-- ERROR MESSAGE -->
         <Alert
           v-if="errorMessage"
           color="red"
           :text="errorMessage"
         />
-        <!-- FORM -->
         <Card max-width="448" v-if="sendMailMode">
           <template v-slot:content>
             <form @submit.prevent="submit">
@@ -57,7 +53,6 @@
 </template>
 
 <script setup>
-// 初期値
 import { ref } from 'vue';
 const email = ref('');
 const errorMessage = ref('');
@@ -69,7 +64,6 @@ import Alert from '@/components/Alert.vue';
 
 // firebase
 import { reissuePassword } from '@/firebase/auth';
-
 
 // ログイン処理
 const submit = async () => {
@@ -85,7 +79,3 @@ const submit = async () => {
 };
 
 </script>
-
-<style>
-
-</style>

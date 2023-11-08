@@ -1,8 +1,7 @@
 <template>
-  <h2 class="text-h5">LIST</h2>
-
   <v-row>
     <v-col cols="12" md="12">
+      <h2 class="text-h5">LIST</h2>
       <v-data-table
         v-model:items-per-page="itemsPerPage"
         v-model:expanded="expanded"
@@ -32,7 +31,7 @@
           <tr>
             <td class="bg-grey-lighten-5" :colspan="columns.length">
               <!-- <pre>{{ item.raw.url }}</pre> -->
-              <a :href="item.raw.url" class="text-decoration-underline">
+              <a :href="item.raw.url" class="text-decoration-underline text-black">
                 <v-icon> mdi-account-edit </v-icon>
                 Portfolio
               </a>
@@ -46,9 +45,8 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-// 初期値
-const initialMembers = ref([]); // 初期データを保持するプロパティ
-const filteredMembers = ref([]); // フィルタリングされたデータを保持するプロパティ
+const initialMembers = ref([]); // 初期データ用
+const filteredMembers = ref([]); // フィルタリング用
 const expanded = ref([]);
 const search = ref(''); // 八区分エリア用
 const searchData = ref({
@@ -86,28 +84,6 @@ import { formatDate } from '@/utils/formatDate'; // 日付形式変換
 onMounted(async () => {
   try {
     const allDoc = await getOneLevelAllData("members");
-
-    // members.value = allDoc.map(doc => {
-
-    //   // const timestamp = doc.joinDate;
-    //   // const date = timestamp.toDate();
-    //   // const year = date.getFullYear();
-    //   // const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    //   // const day = date.getDate().toString().padStart(2, '0');
-    //   // const formattedDate = `${year}/${month}/${day}`;
-
-    //   // return {
-    //   //   url: `/members/${doc.memberID}`,
-    //   //   officeName: doc.officeName,
-    //   //   name: doc.name,
-    //   //   eightArea: doc.eightArea,
-    //   //   state: doc.state,
-    //   //   joinDate: formattedDate,
-    //   //   specialty: doc.specialty,
-    //   // };
-    // });
-
-    // loadingMembers.value = false;
 
     // プロミスの配列を作成
     const promises = allDoc.map(async (doc) => {

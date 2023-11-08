@@ -15,7 +15,6 @@
           <DragFileInput
             v-model:errorMessage="errorMessage"
             @update:filesUploaded="handleFilesUploaded"
-            :authVal="props.authVal"
           />
         </v-col>
       </v-row>
@@ -25,7 +24,6 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-// 初期値設定
 const dialog = ref(false);
 
 const message = ref('');
@@ -33,48 +31,44 @@ const errorMessage = ref('');
 
 // 親から子へ
 const props = defineProps({
-  authVal: Object
+  authData: Object
 });
 
-console.log(props.authVal);
+// console.log(props.authData);
 
 // 子から親へ
 const emit = defineEmits([
   'update:profileIconUrl'
 ]);
 
-
 // components
 import Dialog from '@/components/Dialog.vue';
 import DragFileInput from '@/components/inputs/DragFileInput.vue';
 import Alert from '@/components/Alert.vue';
 
-
 // firebase
 import { upload } from '@/firebase/storage';
 import { updateOneLevelData } from '@/firebase/firestore';
 
-// ファイルがアップロードされた時のハンドラ
+// ファイルがアップロードされたら
 const handleFilesUploaded = async (files) => {
   console.log('Received uploaded files:', files);
   console.log('Received uploaded files:', files[0].type);
   try {
-    const url = await upload("profile", files[0], props.authVal.uid);
+    const url = await upload("profile", files[0], props.authData.uid);
 
     // 登録前にデータを加工
     const userData = {
       profileIcon: url
     };
 
-    // firestore更新
-    await updateOneLevelData(props.authVal.uid, "members", userData);
+    await updateOneLevelData(props.authData.uid, "members", userData);
 
     emit('update:profileIconUrl', url);
 
     errorMessage.value = '';
     message.value = 'ユーザー情報の更新に成功しました。';
 
-    console.log(url);
   } catch (error) {
     console.error(error);
     errorMessage.value = 'ユーザー情報の変更に失敗しました。';

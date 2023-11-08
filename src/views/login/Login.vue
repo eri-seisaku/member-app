@@ -2,19 +2,16 @@
   <v-container class="fill-height" fluid>
     <v-row>
       <v-col>
-        <!-- LOGO ICON -->
         <v-img
           class="mx-auto my-6"
           max-width="228"
           src="@/assets/logo-vuetify.svg"
         ></v-img>
-        <!-- ERROR MESSAGE -->
         <Alert
           v-if="errorMessage"
           color="red"
           :text="errorMessage"
         />
-        <!-- FORM -->
         <Card max-width="448">
           <template v-slot:content>
             <form @submit.prevent="submit">
@@ -32,7 +29,7 @@
 
                 <a
                   class="text-caption text-decoration-none text-blue"
-                  href="/password_request"
+                  href="/password-request"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -73,7 +70,6 @@
 </template>
 
 <script setup>
-// 初期値
 import { ref } from 'vue';
 const visible = ref(false);
 const email = ref('');
@@ -91,20 +87,13 @@ import Alert from '@/components/Alert.vue';
 // firebase
 import { login } from '@/firebase/auth';
 
-// // store
-// import { useAuthStore } from '@/store/auth';
-// const authStore = useAuthStore();
-
 // ログイン処理
 const submit = async () => {
   try {
     await login(email.value, password.value);
 
-    // ストアのログイン状態とプロフィール情報を更新
-    // authStore.login({ id: user.uid, email: user.email });
+    router.push({ name: 'Admin' });
 
-    // ログイン成功後の処理を追加
-    router.push('/admin');
   } catch (error) {
     errorMessage.value = 'ログインに失敗しました。メールアドレスとパスワードを確認してください。';
   }

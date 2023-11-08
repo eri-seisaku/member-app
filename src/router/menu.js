@@ -4,17 +4,17 @@ export const getMenu = (user, userRole) => {
       {
         icon: 'mdi-view-dashboard',
         title: 'DASHBOARD',
-        to: '/admin/administrator/'
+        to: '/admin'
+      },
+      {
+        icon: 'mdi-file-account',
+        title: 'MEMBER',
+        to: '/admin/administrator/member-list'
       },
       {
         icon: 'mdi-swap-horizontal-bold',
         title: 'EXIM',
         to: '/admin/administrator/export-import'
-      },
-      {
-        icon: 'mdi-file-account',
-        title: 'USER LIST',
-        to: '/admin/administrator/member-list'
       },
       {
         icon: 'mdi-check-decagram-outline',
