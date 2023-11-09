@@ -22,7 +22,6 @@ export async function getCurrentUser() {
 async function checkEmailDuplicate(email) {
   try {
     const providers = await fetchSignInMethodsForEmail(auth, email);
-    
     if (providers && providers.length > 0) {
       throw new Error("このメールアドレスは既に登録されています。");
     }
@@ -108,6 +107,7 @@ export async function updateEmailByAuth(currentPassword, newEmail) {
   }
 }
 
+
 // パスワードを更新
 export async function updatePasswordByAuth(currentPassword, newPassword) {
   try {
@@ -149,7 +149,9 @@ export async function resetPassword() {
 export async function reissuePassword(email) {
   try {
     // メールアドレスが登録されているか確認
-    const providers = await fetchSignInMethodsForEmail(auth, email);
+    const providers = await checkEmailDuplicate(email);
+
+    console.log(providers.length);
 
     if (providers && providers.length > 0) {
       await sendPasswordResetEmail(auth, email);

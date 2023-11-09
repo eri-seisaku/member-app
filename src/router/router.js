@@ -79,7 +79,7 @@ const adminRoutes = [
       {
         path: '/admin/portfolio-list', // 管理者,正会員
         component: () => import('@/views/admin/PortfolioList.vue'),
-        meta: { title: 'LIST'}
+        meta: { title: 'PORTFOLIO LIST'}
       },
       {
         path: '/admin/portfolio/:portfolioID', // 管理者,正会員
