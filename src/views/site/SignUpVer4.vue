@@ -120,11 +120,11 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 // validate
-import { validationSchema } from '@/validate/validate';
+import { signupValidationSchema } from '@/validate/validate';
 import { useForm } from 'vee-validate';
 
 const { handleSubmit, errors, setFieldValue } = useForm({
-  validationSchema: validationSchema,
+  validationSchema: signupValidationSchema,
 });
 
 // tabの値を監視してuserTypeの値を変更

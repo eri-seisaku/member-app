@@ -70,7 +70,7 @@ import { getCurrentUser } from '@/firebase/auth';
 import { getTwoLevelAllData } from '@/firebase/firestore';
 
 // utils
-import { formatDate } from '@/utils/formatDate'; // 日付形式変換
+import { formatDateForTimestamp } from '@/utils/formatData'; // 日付形式変換
 
 
 // 取得
@@ -83,7 +83,7 @@ onMounted(async () => {
     // console.log(allDoc);
 
     const promises = allDoc.map(async (doc) => {
-      const formattedDate = await formatDate(doc.date);
+      const formattedDate = await formatDateForTimestamp(doc.date);
       return {
         title: doc.title,
         id: doc.id,

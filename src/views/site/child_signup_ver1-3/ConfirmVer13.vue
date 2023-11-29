@@ -22,27 +22,6 @@
         </div>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col cols="12" md="6" class="d-flex justify-space-evenly">
-        <v-btn
-          @click="back"
-          variant="outlined"
-          size="large"
-          min-width="100"
-        >
-          戻る
-        </v-btn>
-        <v-btn
-          @click="submit"
-          variant="outlined"
-          size="large"
-          min-width="100"
-          class="bg-primary"
-        >
-          送信
-        </v-btn>
-      </v-col>
-      </v-row>
   </div>
 </template>
 
@@ -51,10 +30,9 @@ import { computed } from 'vue';
 
 const props = defineProps({
   value: Object,
-  userType: String,
+  // userType: String,
 });
-
-console.log(props.userType); // ファーム自体のタイプ
+// console.log(props.userType); // ファーム自体のタイプ
 console.log(props.value.userType); // フォームで送信されたタイプ
 
 const transformedData = computed(() => {
@@ -99,25 +77,6 @@ const transformedData = computed(() => {
   return filteredTransformed;
 });
 
-// 子から親のイベントを発火
-const emit = defineEmits([
-  'submit',
-  'back',
-  'errorMessage'
-]);
-
-// 送信
-const submit = () => {
-  if (props.userType === props.value.userType) {
-    emit('submit');
-  } else {
-    emit('errorMessage', 'ユーザーのタイプがフォームと異なります');
-  }
-}
-// 戻る
-const back = () => {
-  emit('back');
-}
 
 </script>
 

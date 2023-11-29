@@ -60,7 +60,7 @@ import { getCurrentUser } from '@/firebase/auth';
 import { getTwoLevelData } from '@/firebase/firestore';
 
 // utils
-import { formatDate } from '@/utils/formatDate';
+import { formatDateForTimestamp } from '@/utils/formatData';
 
 onMounted(async () => {
   try {
@@ -68,7 +68,7 @@ onMounted(async () => {
 
     const profileDoc = await getTwoLevelData(user.value.uid, route.params.portfolioID, "portfolios", "portfolio");
 
-    // const formattedDate = await formatDate(profileDoc.date); // 日付変換
+    // const formattedDate = await formatDateForTimestamp(profileDoc.date); // 日付変換
 
     // console.log(profileDoc);
     portfolioData.value = profileDoc;

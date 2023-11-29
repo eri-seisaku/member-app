@@ -54,14 +54,14 @@ const headers = [
 import { getOneLevelAllData } from '@/firebase/firestore';
 
 // utils
-import { formatDate } from '@/utils/formatDate'; // 日付形式変換
+import { formatDateForTimestamp} from '@/utils/formatData'; // 日付形式変換
 
 onMounted(async () => {
   try {
     const allDoc = await getOneLevelAllData("members");
 
     const promises = allDoc.map(async (doc) => {
-      const formattedDate = await formatDate(doc.joinDate);
+      const formattedDate = await formatDateForTimestamp(doc.joinDate);
       return {
         url: `/members/${doc.memberID}`,
         officeName: doc.officeName,

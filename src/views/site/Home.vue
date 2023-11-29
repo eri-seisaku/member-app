@@ -25,6 +25,7 @@
 </template>
 
 <script setup>
+import { ref, watch } from 'vue';
 const items = [
   { title: '地図で探す', src: 'howto1.png' },
   { title: '検索フォームで探す', src: 'howto2.png' },

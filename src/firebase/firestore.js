@@ -10,7 +10,7 @@ import {
   writeBatch, // バッチ処理(複数の書き込み)
   // arrayUnion // 配列内の一意の値を追加
 } from "firebase/firestore";
-import { array } from 'yup';
+// import { array } from 'yup';
 
 // 更新 - 特定 - 1階層
 export async function updateOneLevelData(userID, collectionName, arrayData) {

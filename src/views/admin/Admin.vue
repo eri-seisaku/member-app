@@ -58,7 +58,7 @@ import { getCurrentUser } from '@/firebase/auth';
 import { getOneLevelData, getOneLevelAllData } from '@/firebase/firestore';
 
 // utils
-import { formatDate } from '@/utils/formatDate'; // 日付形式変換
+import { formatDateForTimestamp } from '@/utils/formatData'; // 日付形式変換
 
 // menu
 import { getMenu } from '@/router/menu';
@@ -73,7 +73,7 @@ onMounted(async () => {
     const allDoc = await getOneLevelAllData("logs");
     // プロミスの配列を作成
     const promises = allDoc.map(async (doc) => {
-      const formattedDate = await formatDate(doc.date);
+      const formattedDate = await formatDateForTimestamp(doc.date);
       return {
         log: doc.log,
         memberID: `/admin/profile/${doc.memberID}`,

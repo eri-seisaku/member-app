@@ -10,22 +10,26 @@
         </v-col>
         <v-col cols="12" v-if="changePasswordMode">
           <form @submit.prevent="submit" id="passwordForm">
-            <div v-for="fieldInfo in fields" :key="fieldInfo.key" class="mb-2">
-              <label class="text-subtitle-1 text-medium-emphasis">
-                {{ fieldInfo.label }}
-              </label>
-              <v-text-field
-                v-model="fieldInfo.field.value.value"
-                :error-messages="fieldInfo.field.errorMessage.value"
-                density="compact"
-                variant="outlined"
-                :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-                :type="visible ? 'text' : 'password'"
-                @click:append-inner="visible = !visible"
-                persistent-hint
-                :hint="fieldInfo.hint"
-              ></v-text-field>
-              <template v-if="fieldInfo.key === 'newPassword'">
+            <v-row no-gutters class="mb-7">
+              <v-col cols="12">
+                <label class="text-subtitle-1 text-medium-emphasis">
+                  現在のパスワード
+                </label>
+                <PasswordField
+                  :field="currentPassword"
+                  hint=""
+                />
+              </v-col>
+            </v-row>
+            <v-row no-gutters class="mb-7">
+              <v-col cols="12">
+                <label class="text-subtitle-1 text-medium-emphasis">
+                  新しいパスワード
+                </label>
+                <PasswordField
+                  :field="newPassword"
+                  hint="大文字、小文字、数字、特殊文字(@、$、!、%、*、?、&)の8文字以上"
+                />
                 <v-chip
                   v-for="chip in chips"
                   :key="chip.key"
@@ -36,17 +40,31 @@
                 >
                   {{ chip.text }}
                 </v-chip>
-              </template>
-            </div>
-            <div class="d-flex justify-end mt-4">
-              <v-btn
-                variant="outlined"
-                type="submit"
-                class="mb-4"
-              >
-                SUBMIT
-              </v-btn>
-            </div>
+              </v-col>
+            </v-row>
+            <v-row no-gutters class="mb-7">
+              <v-col cols="12">
+                <label class="text-subtitle-1 text-medium-emphasis">
+                  新しいパスワード(確認用)
+                </label>
+                <PasswordField
+                  :field="confirmPassword"
+                  hint=""
+                />
+              </v-col>
+            </v-row>
+            <v-row no-gutters align-content="end">
+              <v-col cols="12" align="end">
+                <v-btn
+                  variant="outlined"
+                  type="submit"
+                  size="large"
+                  min-width="100"
+                >
+                  SUBMIT
+                </v-btn>
+              </v-col>
+            </v-row>
           </form>
         </v-col>
       </v-row>
@@ -56,17 +74,21 @@
 
 <script setup>
 import { ref, watch } from 'vue';
-// 初期値設定
 const dialog = ref(false);
-const visible = ref(false);
 const changePasswordMode = ref(true);
-
 const message = ref('');
 const errorMessage = ref('');
 
 // components
 import Dialog from '@/components/Dialog.vue';
 import Alert from '@/components/Alert.vue';
+import PasswordField from '@/components/inputs/PasswordField.vue';
+
+// firebase
+import { updatePasswordByAuth } from '@/firebase/auth';
+
+// utils
+import { chips, updateChips } from '@/utils/formHelper';
 
 // validation
 import { useField, useForm } from 'vee-validate';
@@ -76,26 +98,17 @@ const { handleSubmit } = useForm({
   validationSchema: passwordSchema,
 });
 
-const fields = [
-  { key: 'currentPassword', field: useField('currentPassword'), label: '現在のパスワード', hint: '' },
-  { key: 'newPassword', field: useField('newPassword'), label: '新しいパスワード', hint: '大文字、小文字、数字、特殊文字(@、$、!、%、*、?、&)の8文字以上' },
-  { key: 'confirmPassword', field: useField('confirmPassword'), label: '新しいパスワード(確認用)', hint: '' },
-];
+const currentPassword = useField('currentPassword');
+const newPassword = useField('newPassword');
+const confirmPassword = useField('confirmPassword');
 
-const chips = [
-  { key: 'uppercase', text: '大文字', value: ref(false)},
-  { key: 'lowercase', text: '小文字', value: ref(false)},
-  { key: 'specialSymbols', text: '特殊記号', value: ref(false)},
-  { key: 'count', text: '8文字以上', value: ref(false)},
-];
-
-
-// firebase
-import { updatePasswordByAuth } from '@/firebase/auth';
+// watchでpassword入力の状態を監視
+watch(() => newPassword.value.value, (newVal) => {
+  updateChips(newVal, chips);
+});
 
 const submit = handleSubmit(async (values) => {
   try {
-    // 新しいパスワードが確認用と一致するか確認
     if (values.newPassword !== values.confirmPassword) {
       errorMessage.value = '確認用パスワードが一致しません。';
       return;
@@ -112,25 +125,4 @@ const submit = handleSubmit(async (values) => {
     errorMessage.value = 'パスワードの変更に失敗しました。';
   }
 });
-
-
-// chipの色を変更
-const updateChips = (newVal) => {
-  const uppercaseArr = chips.find(chip => chip.key === 'uppercase');
-  const lowercaseArr = chips.find(chip => chip.key === 'lowercase');
-  const specialSymbolsArr = chips.find(chip => chip.key === 'specialSymbols');
-  const countArr = chips.find(chip => chip.key === 'count');
-  uppercaseArr.value.value = /[A-Z]/.test(newVal);
-  lowercaseArr.value.value = /[a-z]/.test(newVal);
-  specialSymbolsArr.value.value = /[@$!%*?&]/.test(newVal);
-  countArr.value.value = /^.{8,64}$/.test(newVal);
-};
-
-// watchで入力の状態を監視
-fields.forEach(fieldInfo => {
-  watch(() => fieldInfo.field.value.value, (newVal) => {
-    updateChips(newVal);
-  });
-});
-
 </script>

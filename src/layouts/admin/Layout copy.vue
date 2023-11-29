@@ -50,10 +50,6 @@
         ></v-list-item>
       </v-list>
 
-      <!-- 動く矢印 -->
-      <MoveArrow :move-y="arrowMovePx"/>
-      <!-- /動く矢印 -->
-
       <template v-slot:append>
         <div class="pa-2">
           <v-btn
@@ -97,21 +93,11 @@ const color = ref('');
 const navMenus = ref([]);
 const user = ref({}); // authのデータ用
 const userData = ref({}); // firestoreのデータ用
-const linkHeight = ref(50); // 動く矢印用
 
 // router
 import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
-
-// component
-import MoveArrow from '@/components/MoveArrow.vue';
-
-// ページのタイトルを取得
-const arrowMovePx = computed(() => {
-  console.log(route.meta.index);
-  return route.meta.index * linkHeight.value;
-});
 
 // ページのタイトルを取得
 const title = computed(() => {

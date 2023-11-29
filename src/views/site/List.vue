@@ -79,7 +79,7 @@ import SearchForm from '@/views/site/child_list/SearchForm.vue';
 import { getOneLevelAllData } from '@/firebase/firestore';
 
 // utils
-import { formatDate } from '@/utils/formatDate'; // 日付形式変換
+import { formatDateForTimestamp } from '@/utils/formatData'; // 日付形式変換
 
 onMounted(async () => {
   try {
@@ -87,7 +87,7 @@ onMounted(async () => {
 
     // プロミスの配列を作成
     const promises = allDoc.map(async (doc) => {
-      const formattedDate = await formatDate(doc.joinDate);
+      const formattedDate = await formatDateForTimestamp(doc.joinDate);
       return {
         url: `/members/${doc.memberID}`,
         officeName: doc.officeName,

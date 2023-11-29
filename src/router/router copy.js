@@ -87,42 +87,42 @@ const adminRoutes = [
         path: '/admin', // 管理者,正会員,組合員
         name: 'Admin',
         component: () => import('@/views/admin/Admin.vue'),
-        meta: { title: 'DASHBOARD', index: 1 }
+        meta: { title: 'DASHBOARD'}
       },
       {
         path: '/admin/profile/:userID', // 管理者,正会員,組合員
         component: () => import('@/views/admin/Profile.vue'),
-        meta: { title: 'PROFILE', index: 2 }
+        meta: { title: 'PROFILE'}
       },
       {
         path: '/admin/portfolio-list', // 管理者,正会員
         component: () => import('@/views/admin/PortfolioList.vue'),
-        meta: { title: 'PORTFOLIO LIST', index: 3 }
+        meta: { title: 'PORTFOLIO LIST'}
       },
       {
         path: '/admin/portfolio/:portfolioID', // 管理者,正会員
         component: () => import('@/views/admin/Edit.vue'),
-        meta: { title: 'EDIT', index: 3 }
+        meta: { title: 'EDIT'}
       },
       {
         path: '/admin/post', // 管理者,正会員
         component: () => import('@/views/admin/Post.vue'),
-        meta: { title: 'POST', index: 3 }
+        meta: { title: 'POST'}
       },
       {
         path: '/admin/administrator/export-import', // 管理者
         component: () => import('@/views/admin/administrator/ExportImport.vue'),
-        meta: { title: 'EXPORT IMPORT', index: 3 }
+        meta: { title: 'EXPORT IMPORT'}
       },
       {
         path: '/admin/administrator/member-list', // 管理者
         component: () => import('@/views/admin/administrator/MemberList.vue'),
-        meta: { title: 'MEMBER LIST', index: 2 }
+        meta: { title: 'MEMBER LIST'}
       },
       {
         path: '/admin/administrator/approval', // 管理者
         component: () => import('@/views/admin/administrator/Approval.vue'),
-        meta: { title: 'APPROVAL', index: 4 }
+        meta: { title: 'APPROVAL'}
       },
       {
         path: '/admin/test', // テスト用

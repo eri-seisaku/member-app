@@ -33,7 +33,10 @@
               <label class="text-subtitle-1 text-medium-emphasis">
                 {{ editInfo.label }}
               </label>
-
+              <TextField
+                :field="editInfo.field"
+                form="profileForm"
+              />
               <v-text-field
                 v-model="editInfo.field.value.value"
                 :error-messages="editInfo.field.errorMessage.value"
@@ -46,7 +49,6 @@
               <label class="text-subtitle-1 text-medium-emphasis">
                 {{ readInfo.label }}
               </label>
-
               <v-text-field
                 v-model="readInfo.value.value"
                 density="compact"
@@ -203,9 +205,8 @@ onMounted(async () => {
 // 送信処理
 const submit = handleSubmit(async (values) => {
   try {
-    console.log(values);
     // ユーザー情報を更新
-    // await updateOneLevelData(user.value.uid, "members", values);
+    await updateOneLevelData(user.value.uid, "members", values);
     message.value = 'ユーザー情報の更新に成功しました。';
   } catch (error) {
     console.error('ユーザーデータ更新エラー', error);
